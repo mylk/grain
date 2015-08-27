@@ -31,7 +31,11 @@ class Controller
     public function render($template, $parameters)
     {
         \extract($parameters);
-
-        require __DIR__ . "/Views/$template";
+        
+        // get the caller path to reach the Views directory
+        $callerFile = \debug_backtrace()[0]["file"];
+        $callerPath = \substr($callerFile, 0, \strrpos($callerFile, "/"));
+        
+        require "$callerPath/../Views/$template";
     }
 }
