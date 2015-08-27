@@ -2,13 +2,16 @@
 
 namespace Grain;
 
+use Grain\Router;
+
 class Core
 {
     private $routes = array();
     private $config = array();
+    private $router;
 
     /**
-     * Used to pass the application parametets to the controllers.
+     * Used to pass the application parametets to the controllers and instanciate required classes.
      * 
      * Core is being instanciated from the front controller.
      * 
@@ -17,6 +20,7 @@ class Core
     public function __construct($config)
     {
         $this->config = $config;
+        $this->router = new Router();
     }
 
     /**
@@ -30,8 +34,8 @@ class Core
      */
     public function handle($requestPath)
     {
-        // find the route tha matches the request
-        $matchedRoute = $this->routeMatcher($requestPath);
+        // find the route that matches the request
+        $matchedRoute = $this->router->matcher($this->routes, $requestPath);
 
         if ($matchedRoute) {
             // get the request parameters
@@ -98,27 +102,7 @@ class Core
 
         return $this;
     }
-    
-    /**
-     * Checks if a request path matches to a route.
-     * 
-     * Retuns the matched route.
-     * 
-     * @param string $requestPath
-     * @return array
-     */
-    private function routeMatcher($requestPath)
-    {
-        foreach ($this->routes as $routePath => $settings) {
-            // replace request path parameters with regex
-            $requestPathRegex = $this->buildRequestPathRegex($requestPath, $settings);
-            
-            if (\preg_match($requestPathRegex, $routePath)) {
-                return $this->routes[$routePath];
-            }
-        }
-    }
-    
+
     /**
      * Extracts the parameter values from the request path.
      * 
@@ -141,28 +125,7 @@ class Core
 
         return $request;
     }
-    
-    /**
-     * Converts the request path to a regular expression to be used
-     * to find a match to a route path.
-     * 
-     * @param string $requestPath
-     * @param array $routeOptions
-     * @return string
-     */
-    private function buildRequestPathRegex($requestPath, $routeOptions)
-    {
-        $pathElements = \explode("/", $requestPath);
 
-        foreach ($routeOptions["parameterPositions"] as $parameterPosition) {
-            $pathElements[$parameterPosition] = "\{(.*?)\}";
-        }
-
-        $regexPattern = "/^" . \str_replace("/", "\/", \implode("/", $pathElements)) . "$/";
-            
-        return $regexPattern;
-    }
-    
     /**
      * Finds the positions of parameters in a route path
      * 
