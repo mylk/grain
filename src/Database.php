@@ -63,12 +63,12 @@ class Database
         }
     }
     
-    public function find($query, $parameters)
+    public function find($query, $parameters =  array())
     {
         return $this->execute($query, $parameters);
     }
     
-    public function findOne($query, $parameters)
+    public function findOne($query, $parameters = array())
     {
         return $this->execute($query, $parameters, $one = true);
     }
