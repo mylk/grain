@@ -30,6 +30,7 @@ class Core
      * If there is no matched route, it returns a canned response with 404 status.
      * 
      * @param string $requestPath
+     * 
      * @return string
      */
     public function handle($requestPath)
@@ -76,18 +77,20 @@ class Core
      * Maps the route paths to controllers.
      * 
      * It is used by the front controller to register routes and controllers.
+     * Also, it searches a route path for pararmeter placeholder and populates
+     * the route's description.
      * 
      * @param string $routePath
      * @param string $controller
+     * 
      * @return Core
      */
     public function map($routePath, $controller)
     {
         $parametersPosition = array();
         
-        $regex = "/\{(.*?)\}/";
         $matches = array();
-        \preg_match_all($regex, $routePath, $matches);
+        \preg_match_all("/\{(.*?)\}/", $routePath, $matches);
         
         $parameters = array();
         if (\count($matches) > 0) {
@@ -105,14 +108,15 @@ class Core
     }
 
     /**
-     * Finds the positions of parameters in a route path
+     * Finds the positions of parameters in a route path.
      * 
-     * @param type $requestPath
+     * @param type $routePath
+     * 
      * @return array
      */
-    private function getPathParameterPositions($requestPath)
+    private function getPathParameterPositions($routePath)
     {
-        $pathElements = \explode("/", $requestPath);
+        $pathElements = \explode("/", $routePath);
 
         $parametersPos = array();
         $elementPos = 0;

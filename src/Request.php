@@ -7,17 +7,21 @@ class Request
     /**
      * Extracts the parameter values from the request path.
      * 
+     * Parameter positions in the requested URLs are based
+     * on the pattern of the defined routes.
+     * 
      * @param string $requestPath
      * @param array $matchedRoute
+     * 
      * @return array $request
      */
     public function getParameters($requestPath, $matchedRoute)
     {
-        // get the parameters of the request path
-        $pathElements = \explode("/", $requestPath);
+        $requestPathElements = \explode("/", $requestPath);
+        
         $requestParameters = array();
         foreach ($matchedRoute["parameterPositions"] as $parameterPosition) {
-            $requestParameters[] = $pathElements[$parameterPosition];
+            $requestParameters[] = $requestPathElements[$parameterPosition];
         }
 
         // create an array with the route parameter name as a key
