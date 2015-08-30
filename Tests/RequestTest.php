@@ -18,7 +18,7 @@ class RequestTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array(), $parameters);
     }
 
-    public function testGetParametersParameterOnlyOne()
+    public function testGetParametersParameterOneAndOnly()
     {
         $request = new Request();
         $parameters = $request->getParameters("/1", array(
