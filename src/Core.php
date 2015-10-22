@@ -51,7 +51,7 @@ class Core
             $controllerName = $controllerArray[1];
             $actionName = $controllerArray[2];
             
-            $className = "$projectName\\Controller\\$controllerName";
+            $className = "$projectName\\Controller\\{$controllerName}Controller";
             $controllerMethod = "{$actionName}Action";
 
             $controllerClass = new $className();
