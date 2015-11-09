@@ -3,10 +3,12 @@
 namespace Grain;
 
 use Grain\Database;
+use Grain\Container;
 
 class Controller
 {
     private $config;
+    private $container;
     
     /**
      * Stores the database configurations in a private variable.
@@ -66,5 +68,18 @@ class Controller
         $callerPath = \substr($callerFile, 0, \strrpos($callerFile, "/"));
         
         require "$callerPath/../Views/$template";
+    }
+    
+    public function getContainer()
+    {
+        $callerFile = \debug_backtrace()[0]["file"];
+        $callerPath = \substr($callerFile, 0, \strrpos($callerFile, "/"));
+        
+        if (!$this->container) {
+            $this->container = new Container();
+            $this->container->loadDefinition("$callerPath/../Resources/services.json");
+        }
+        
+        return $this->container;
     }
 }
