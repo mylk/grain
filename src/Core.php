@@ -3,12 +3,14 @@
 namespace Grain;
 
 use Grain\Router;
+use Grain\Container;
 
 class Core
 {
     private $routes = array();
     private $config = array();
     private $router;
+    private $container;
 
     /**
      * Used to pass the application parametets to the controllers and instanciate required classes.
@@ -58,6 +60,7 @@ class Core
 
             // add the global configuration to the controller and execute
             $controllerClass->setConfig($this->config);
+            $controllerClass->setContainer($this->container);
             $response = $controllerClass->$controllerMethod($parameters);
 
             // handle array controller responses as JSON responses
@@ -104,6 +107,16 @@ class Core
             "parameterPositions" => $parametersPosition
         );
 
+        return $this;
+    }
+    
+    public function initializeContainer($servicesDefinition)
+    {        
+        if (!$this->container) {
+            $this->container = new Container();
+            $this->container->loadDefinitions($servicesDefinition);
+        }
+        
         return $this;
     }
 

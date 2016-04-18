@@ -3,7 +3,6 @@
 namespace Grain;
 
 use Grain\Database;
-use Grain\Container;
 
 class Controller
 {
@@ -70,16 +69,15 @@ class Controller
         require "$callerPath/../Views/$template";
     }
     
-    public function getContainer()
+    public function setContainer($container)
     {
-        $callerFile = \debug_backtrace()[0]["file"];
-        $callerPath = \substr($callerFile, 0, \strrpos($callerFile, "/"));
+        $this->container = $container;
         
-        if (!$this->container) {
-            $this->container = new Container();
-            $this->container->loadDefinition("$callerPath/../Resources/services.json");
-        }
-        
+        return $this;
+    }
+    
+    public function getContainer()
+    {        
         return $this->container;
     }
 }
