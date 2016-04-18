@@ -4,27 +4,30 @@ namespace Grain;
 
 class Container
 {
-    private $container;
     private $definitions;
+    private $container;
     
     /**
      * Loads the services definition file.
      * 
-     * @param type $definitionsPath
+     * @param string $servicesDefinition
      * @throws Exception
      */
-    public function loadDefinition($definitionsPath)
-    {
-        $definitions = null;
-        if (\file_exists($definitionsPath)) {
-            $definitions = \json_decode(\file_get_contents($definitionsPath), true);
-        }
-        
-        if (!$definitions) {
+    public function loadDefinitions($servicesDefinition)
+    {        
+        if (!$servicesDefinition) {
             throw new \Exception("The format of the services definition file is invalid.", 10);
         }
-        
-        $this->definitions = $definitions;
+
+        // get only public service definitions
+        foreach ($servicesDefinition as $definitionName => $definition) {
+            if (
+                !isset($definition["public"])
+                || (isset($definition["public"]) && $definition["public"])
+            ) {
+                $this->definitions[$definitionName] = $definition;
+            }
+        }
     }
     
     /**
