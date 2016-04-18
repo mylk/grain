@@ -4,6 +4,7 @@ namespace Grain;
 
 use Grain\Router;
 use Grain\Container;
+use Grain\EventDispatcher;
 
 class Core
 {
@@ -11,6 +12,7 @@ class Core
     private $config = array();
     private $router;
     private $container;
+    private $eventDispatcher;
 
     /**
      * Used to pass the application parametets to the controllers and instanciate required classes.
@@ -41,6 +43,8 @@ class Core
         $matchedRoute = $this->router->matcher($this->routes, $requestPath);
 
         if ($matchedRoute) {
+            $this->eventDispatcher->dispatch("core.post_request");
+            
             // get the request parameters
             $request = new Request();
             $parameters = $request->getParameters($requestPath, $matchedRoute);
@@ -60,7 +64,8 @@ class Core
 
             // add the global configuration to the controller and execute
             $controllerClass->setConfig($this->config);
-            $controllerClass->setContainer($this->container);
+            $controllerClass->setContainer($this->container)
+                ->setEventDispatcher($this->eventDispatcher);
             $response = $controllerClass->$controllerMethod($parameters);
 
             // handle array controller responses as JSON responses
@@ -72,6 +77,8 @@ class Core
             \header("HTTP/1.0 404 Not Found");
             $response = "Route not found.";
         }
+        
+        $this->eventDispatcher->dispatch("core.pre_response");
 
         return $response;
     }
@@ -117,6 +124,16 @@ class Core
             $this->container->loadDefinitions($servicesDefinition);
         }
         
+        return $this;
+    }
+    
+    public function initializeEventDispatcher($servicesDefinition)
+    {        
+        if (!$this->eventDispatcher) {
+            $this->eventDispatcher = new EventDispatcher();
+            $this->eventDispatcher->loadDefinitions($servicesDefinition);
+        }
+            
         return $this;
     }
 

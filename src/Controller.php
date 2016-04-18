@@ -3,6 +3,7 @@
 namespace Grain;
 
 use Grain\Database;
+use Grain\Container;
 
 class Controller
 {
@@ -79,5 +80,17 @@ class Controller
     public function getContainer()
     {        
         return $this->container;
+    }
+    
+    public function setEventDispatcher($eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+        
+        return $this;
+    }
+    
+    public function getEventDispatcher()
+    {        
+        return $this->eventDispatcher;
     }
 }
