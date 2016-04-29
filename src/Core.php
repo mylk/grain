@@ -44,9 +44,9 @@ class Core
         // find the route that matches the request
         $matchedRoute = $this->router->matcher($this->routes, $requestPath);
 
+        $this->eventDispatcher->dispatch("core.post_request");
+
         if ($matchedRoute) {
-            $this->eventDispatcher->dispatch("core.post_request");
-            
             // get the request parameters
             $request = new Request();
             $parameters = $request->getParameters($requestPath, $matchedRoute);

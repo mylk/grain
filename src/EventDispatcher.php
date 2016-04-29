@@ -39,7 +39,7 @@ class EventDispatcher
         $listenerMethod = $this->getListenerMethodName($eventName);
 
         foreach ($listeners as $listener) {
-            if (\class_exists($listener["class"]) && \method_exists($listener["class"], $listenerMethod)){
+            if (\class_exists($listener["class"]) && \method_exists($listener["class"], $listenerMethod)) {
                 $listener = new $listener["class"]();
                 $listener->$listenerMethod();
             }
