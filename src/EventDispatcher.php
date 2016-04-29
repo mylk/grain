@@ -32,12 +32,17 @@ class EventDispatcher
     public function dispatch($eventName)
     {
         $listeners = $this->definitions[$eventName];
+        if (!$listeners) {
+            return false;
+        }
 
         $listenerMethod = $this->getListenerMethodName($eventName);
 
         foreach ($listeners as $listener) {
-            $listener = new $listener["class"]();
-            $listener->$listenerMethod();
+            if (\class_exists($listener["class"]) && \method_exists($listener["class"], $listenerMethod)){
+                $listener = new $listener["class"]();
+                $listener->$listenerMethod();
+            }
         }
     }
 
