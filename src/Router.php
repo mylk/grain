@@ -49,4 +49,27 @@ class Router
             
         return $regexPattern;
     }
+
+    /**
+     * Finds the positions of parameters in a route path.
+     *
+     * @param type $routePath
+     *
+     * @return array
+     */
+    public static function getPathParameterPositions($routePath)
+    {
+        $pathElements = \explode("/", $routePath);
+
+        $parametersPos = array();
+        $elementPos = 0;
+        foreach ($pathElements as $element) {
+            if (\preg_match("/\{(.*?)\}/", $element)) {
+                $parametersPos[] = $elementPos;
+            }
+            $elementPos++;
+        }
+
+        return $parametersPos;
+    }
 }

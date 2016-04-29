@@ -87,4 +87,25 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         
         $this->assertEquals(null, $matchedRoute);
     }
+
+    /**
+     * @dataProvider getRoutePaths
+     */
+    public function testGetPathParameterPositions($routePath, $parameterPositions)
+    {
+        $this->assertEquals($parameterPositions, Router::getPathParameterPositions($routePath));
+    }
+
+    public function getRoutePaths()
+    {
+        return array(
+            array("/{id}", array(1)),
+            array("/{id}/edit", array(1)),
+            array("/user/{id}/edit", array(2)),
+            array("/user/edit/{id}", array(3)),
+            array("/{id}/{version}", array(1, 2)),
+            array("/{id}/edit/{version}", array(1, 3)),
+            array("/user/{id}/edit/{version}", array(2, 4))
+        );
+    }
 }

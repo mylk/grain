@@ -106,7 +106,7 @@ class Core
         
         $parameters = array();
         if (\count($matches) > 0) {
-            $parametersPosition = $this->getPathParameterPositions($routePath);
+            $parametersPosition = Router::getPathParameterPositions($routePath);
             $parameters = $matches[1];
         }
 
@@ -133,28 +133,5 @@ class Core
         $this->eventDispatcher->loadDefinitions($servicesDefinition);
             
         return $this;
-    }
-
-    /**
-     * Finds the positions of parameters in a route path.
-     * 
-     * @param type $routePath
-     * 
-     * @return array
-     */
-    private function getPathParameterPositions($routePath)
-    {
-        $pathElements = \explode("/", $routePath);
-
-        $parametersPos = array();
-        $elementPos = 0;
-        foreach ($pathElements as $element) {
-            if (\preg_match("/\{(.*?)\}/", $element)) {
-                $parametersPos[] = $elementPos;
-            }
-            $elementPos++;
-        }
-
-        return $parametersPos;
     }
 }
