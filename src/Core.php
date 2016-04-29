@@ -106,7 +106,7 @@ class Core
 
         $parameters = array();
         if (\count($matches) > 0) {
-            $parametersPosition = Router::getPathParameterPositions($routePath);
+            $parametersPosition = $this->router->getPathParameterPositions($routePath);
             $parameters = $matches[1];
         }
 

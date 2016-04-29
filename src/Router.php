@@ -57,7 +57,7 @@ class Router
      *
      * @return array
      */
-    public static function getPathParameterPositions($routePath)
+    public function getPathParameterPositions($routePath)
     {
         $pathElements = \explode("/", $routePath);
 
