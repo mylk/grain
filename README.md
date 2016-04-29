@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/mylk/grain.svg?branch=master)](https://travis-ci.org/mylk/grain)
+[![Code Climate](https://codeclimate.com/github/mylk/grain/badges/gpa.svg)](https://codeclimate.com/github/mylk/grain)
 
 Grain
 =====
