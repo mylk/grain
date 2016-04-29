@@ -11,11 +11,14 @@ class Container
      * Loads the services definition file.
      * 
      * @param string $servicesDefinition
+     * @return boolean|void
      * @throws Exception
      */
     public function loadDefinitions($servicesDefinition)
     {        
-        if (!$servicesDefinition) {
+        if (\is_array($servicesDefinition) && empty($servicesDefinition)) {
+            return false;
+        } elseif (!$servicesDefinition) {
             throw new \Exception("The format of the services definition file is invalid.", 10);
         }
 

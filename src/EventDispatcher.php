@@ -10,11 +10,14 @@ class EventDispatcher
      * Loads the services definition file.
      *
      * @param type $definitions
+     * @return boolean|void
      * @throws Exception
      */
     public function loadDefinitions($definitions)
     {
-        if (!$definitions) {
+        if (\is_array($definitions) && empty($definitions)) {
+            return false;
+        } elseif (!$definitions) {
             throw new \Exception("The format of the services definition file is invalid.", 10);
         }
 

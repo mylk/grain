@@ -25,6 +25,8 @@ class Core
     {
         $this->config = $config;
         $this->router = new Router();
+        $this->initializeContainer(array())
+            ->initializeEventDispatcher(array());
     }
 
     /**
@@ -119,20 +121,16 @@ class Core
     
     public function initializeContainer($servicesDefinition)
     {        
-        if (!$this->container) {
-            $this->container = new Container();
-            $this->container->loadDefinitions($servicesDefinition);
-        }
+        $this->container = new Container();
+        $this->container->loadDefinitions($servicesDefinition);
         
         return $this;
     }
     
     public function initializeEventDispatcher($servicesDefinition)
-    {        
-        if (!$this->eventDispatcher) {
-            $this->eventDispatcher = new EventDispatcher();
-            $this->eventDispatcher->loadDefinitions($servicesDefinition);
-        }
+    {
+        $this->eventDispatcher = new EventDispatcher();
+        $this->eventDispatcher->loadDefinitions($servicesDefinition);
             
         return $this;
     }
