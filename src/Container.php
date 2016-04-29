@@ -42,27 +42,27 @@ class Container
      */
     public function __get($name)
     {
-        // requested service exists in services definition file
-        if (isset($this->definitions[$name])) {
-            $className = $this->definitions[$name]["class"];
-            $dependencies = $this->definitions[$name]["dependencies"];
-
-            // if the service has not been initialized yet
-            if (!isset($this->container[$className])) {
-                // request the service dependencies also
-                $dependenciesResolved = array();
-                foreach ($dependencies as $dependency) {
-                    $dependenciesResolved[] = $this->$dependency;
-                }
-                
-                // initialize the requested service, adding the dependencies
-                $reflector = new \ReflectionClass($className);
-                $this->container[$className] = $reflector->newInstanceArgs($dependenciesResolved);
-            }
-
-            return $this->container[$className];
-        } else {
+        if (!isset($this->definitions[$name])) {
             throw new \Exception("Service \"$name\" does not exist in services definition.", 20);
         }
+
+        // requested service exists in services definition file
+        $className = $this->definitions[$name]["class"];
+        $dependencies = $this->definitions[$name]["dependencies"];
+
+        // if the service has not been initialized yet
+        if (!isset($this->container[$className])) {
+            // request the service dependencies also
+            $dependenciesResolved = array();
+            foreach ($dependencies as $dependency) {
+                $dependenciesResolved[] = $this->$dependency;
+            }
+
+            // initialize the requested service, adding the dependencies
+            $reflector = new \ReflectionClass($className);
+            $this->container[$className] = $reflector->newInstanceArgs($dependenciesResolved);
+        }
+
+        return $this->container[$className];
     }
 }

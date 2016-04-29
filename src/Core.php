@@ -46,38 +46,40 @@ class Core
 
         $this->eventDispatcher->dispatch("core.post_request");
 
-        if ($matchedRoute) {
-            // get the request parameters
-            $request = new Request();
-            $parameters = $request->getParameters($requestPath, $matchedRoute);
-
-            // prepare and instanciate the route's controller class
-            $controller = $matchedRoute["controller"];
-            $controllerArray = \explode(":", $controller);
-
-            $projectName = $controllerArray[0];
-            $controllerName = $controllerArray[1];
-            $actionName = $controllerArray[2];
-
-            $className = "$projectName\\Controller\\{$controllerName}Controller";
-            $controllerMethod = "{$actionName}Action";
-
-            $controllerClass = new $className();
-
-            // add the global configuration to the controller and execute
-            $controllerClass->setConfig($this->config);
-            $controllerClass->setContainer($this->container)
-                ->setEventDispatcher($this->eventDispatcher);
-            $response = $controllerClass->$controllerMethod($parameters);
-
-            // handle array controller responses as JSON responses
-            if (\gettype($response) === "array") {
-                \header("Content-Type: application/json");
-                $response = \json_encode($response);
-            }
-        } else {
+        if (!$matchedRoute) {
             \header("HTTP/1.0 404 Not Found");
             $response = "Route not found.";
+
+            return $response;
+        }
+
+        // get the request parameters
+        $request = new Request();
+        $parameters = $request->getParameters($requestPath, $matchedRoute);
+
+        // prepare and instanciate the route's controller class
+        $controller = $matchedRoute["controller"];
+        $controllerArray = \explode(":", $controller);
+
+        $projectName = $controllerArray[0];
+        $controllerName = $controllerArray[1];
+        $actionName = $controllerArray[2];
+
+        $className = "$projectName\\Controller\\{$controllerName}Controller";
+        $controllerMethod = "{$actionName}Action";
+
+        $controllerClass = new $className();
+
+        // add the global configuration to the controller and execute
+        $controllerClass->setConfig($this->config);
+        $controllerClass->setContainer($this->container)
+            ->setEventDispatcher($this->eventDispatcher);
+        $response = $controllerClass->$controllerMethod($parameters);
+
+        // handle array controller responses as JSON responses
+        if (\gettype($response) === "array") {
+            \header("Content-Type: application/json");
+            $response = \json_encode($response);
         }
 
         $this->eventDispatcher->dispatch("core.pre_response");
