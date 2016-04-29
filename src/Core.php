@@ -16,9 +16,9 @@ class Core
 
     /**
      * Used to pass the application parametets to the controllers and instanciate required classes.
-     * 
+     *
      * Core is being instanciated from the front controller.
-     * 
+     *
      * @param array $config
      */
     public function __construct($config)
@@ -31,12 +31,12 @@ class Core
 
     /**
      * Handles the requests and retuns a response.
-     * 
+     *
      * It first matches the request to a route and then executes the matched controller.
      * If there is no matched route, it returns a canned response with 404 status.
-     * 
+     *
      * @param string $requestPath
-     * 
+     *
      * @return string
      */
     public function handle($requestPath)
@@ -54,11 +54,11 @@ class Core
             // prepare and instanciate the route's controller class
             $controller = $matchedRoute["controller"];
             $controllerArray = \explode(":", $controller);
-            
+
             $projectName = $controllerArray[0];
             $controllerName = $controllerArray[1];
             $actionName = $controllerArray[2];
-            
+
             $className = "$projectName\\Controller\\{$controllerName}Controller";
             $controllerMethod = "{$actionName}Action";
 
@@ -79,7 +79,7 @@ class Core
             \header("HTTP/1.0 404 Not Found");
             $response = "Route not found.";
         }
-        
+
         $this->eventDispatcher->dispatch("core.pre_response");
 
         return $response;
@@ -87,23 +87,23 @@ class Core
 
     /**
      * Maps the route paths to controllers.
-     * 
+     *
      * It is used by the front controller to register routes and controllers.
      * Also, it searches a route path for pararmeter placeholder and populates
      * the route's description.
-     * 
+     *
      * @param string $routePath
      * @param string $controller
-     * 
+     *
      * @return Core
      */
     public function map($routePath, $controller)
     {
         $parametersPosition = array();
-        
+
         $matches = array();
         \preg_match_all("/\{(.*?)\}/", $routePath, $matches);
-        
+
         $parameters = array();
         if (\count($matches) > 0) {
             $parametersPosition = Router::getPathParameterPositions($routePath);
@@ -118,20 +118,34 @@ class Core
 
         return $this;
     }
-    
-    public function initializeContainer($servicesDefinition)
-    {        
+
+    /**
+     * Initializes the container and sets the service definitions
+     *
+     * @param type $serviceDefinitions
+     *
+     * @return Core
+     */
+    public function initializeContainer($serviceDefinitions)
+    {
         $this->container = new Container();
-        $this->container->loadDefinitions($servicesDefinition);
-        
+        $this->container->loadDefinitions($serviceDefinitions);
+
         return $this;
     }
-    
-    public function initializeEventDispatcher($servicesDefinition)
+
+    /**
+     * Initializes the event dispatcher and sets the service definitions
+     *
+     * @param type $serviceDefinitions
+     *
+     * @return Core
+     */
+    public function initializeEventDispatcher($serviceDefinitions)
     {
         $this->eventDispatcher = new EventDispatcher();
-        $this->eventDispatcher->loadDefinitions($servicesDefinition);
-            
+        $this->eventDispatcher->loadDefinitions($serviceDefinitions);
+
         return $this;
     }
 }

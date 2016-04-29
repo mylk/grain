@@ -8,22 +8,22 @@ class Container
     private $container;
     
     /**
-     * Loads the services definition file.
+     * Loads the service definitions file.
      * 
-     * @param string $servicesDefinition
+     * @param string $serviceDefinitions
      * @return boolean|void
      * @throws Exception
      */
-    public function loadDefinitions($servicesDefinition)
+    public function loadDefinitions($serviceDefinitions)
     {        
-        if (\is_array($servicesDefinition) && empty($servicesDefinition)) {
+        if (\is_array($serviceDefinitions) && empty($serviceDefinitions)) {
             return false;
-        } elseif (!$servicesDefinition) {
+        } elseif (!$serviceDefinitions) {
             throw new \Exception("The format of the services definition file is invalid.", 10);
         }
 
         // get only public service definitions
-        foreach ($servicesDefinition as $definitionName => $definition) {
+        foreach ($serviceDefinitions as $definitionName => $definition) {
             if (
                 !isset($definition["public"])
                 || (isset($definition["public"]) && $definition["public"])

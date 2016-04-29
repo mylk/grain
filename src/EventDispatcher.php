@@ -7,7 +7,7 @@ class EventDispatcher
     private $definitions;
 
     /**
-     * Loads the services definition file.
+     * Loads the service definitions file.
      *
      * @param type $definitions
      * @return boolean|void
@@ -29,6 +29,16 @@ class EventDispatcher
         }
     }
 
+    /**
+     * Dispatches an event.
+     *
+     * Executes event listeners subscribed to given event
+     * in the service definitions file.
+     *
+     * @param string $eventName
+     *
+     * @return boolean|void
+     */
     public function dispatch($eventName)
     {
         $listeners = $this->definitions[$eventName];
@@ -46,6 +56,13 @@ class EventDispatcher
         }
     }
 
+    /**
+     * Groups event listeners by subscribed event.
+     *
+     * @param array $definition
+     *
+     * @return void
+     */
     private function groupByEvent($definition)
     {
         foreach ($definition["events"] as $event) {
@@ -57,6 +74,14 @@ class EventDispatcher
         }
     }
 
+    /**
+     * Gets the method name to be called on event listeners
+     * according to the given event name.
+     *
+     * @param type $eventNameFull
+     *
+     * @return string
+     */
     private function getListenerMethodName($eventNameFull)
     {
         // strip the event name, usually prefixed with a "class name"
