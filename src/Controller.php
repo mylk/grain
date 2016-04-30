@@ -6,7 +6,7 @@ use Grain\Database;
 use Grain\Container;
 use Grain\EventDispatcher;
 
-class Controller
+abstract class Controller
 {
     private $config;
     private $container;
@@ -42,7 +42,7 @@ class Controller
      *
      * @return \PDO
      */
-    public function getDb($databaseName)
+    protected function getDb($databaseName)
     {
         $config = $this->config["mysql"][$databaseName];
 
@@ -60,7 +60,7 @@ class Controller
      *
      * @return void
      */
-    public function render($template, $parameters)
+    protected function render($template, $parameters)
     {
         \extract($parameters);
 
@@ -90,7 +90,7 @@ class Controller
      *
      * @return Container
      */
-    public function getContainer()
+    protected function getContainer()
     {
         return $this->container;
     }
@@ -114,7 +114,7 @@ class Controller
      *
      * @return EventDispatcher
      */
-    public function getEventDispatcher()
+    protected function getEventDispatcher()
     {
         return $this->eventDispatcher;
     }
