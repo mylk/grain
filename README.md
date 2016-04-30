@@ -79,15 +79,3 @@ Database abstraction
 --------------------
 
 Avoid ugly queries in your code and provide a way to access and modify your database data more easily.
-
-Request data abstraction
-------------------------
-
-A way to access all requests data with the same easy way, irrespective of the HTTP method used.
-
-Routing improvement, separating request method
-----------------------------------------------
-
-Define the request method in the routing functionality.
-
-So the same route path can use different controller actions based on the HTTP request method used.
