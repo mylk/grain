@@ -50,6 +50,8 @@ class Core
             \header("HTTP/1.0 404 Not Found");
             $response = "Route not found.";
 
+            $this->eventDispatcher->dispatch("core.pre_response");
+
             return $response;
         }
 
