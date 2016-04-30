@@ -28,6 +28,13 @@ class Request
         // and the request value as a value
         $request = \array_combine($matchedRoute["parameters"], $requestParameters);
 
+        // get any data sent with the request
+        $requestData = \file_get_contents("php://input");
+        if ($requestData) {
+            \parse_str($requestData, $requestDataArray);
+            $request = \array_merge($request, $requestDataArray);
+        }
+
         return $request;
     }
 }
