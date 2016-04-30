@@ -118,4 +118,15 @@ abstract class Controller
     {
         return $this->eventDispatcher;
     }
+
+    /**
+     * Redirects to the given url
+     *
+     * @param string $url
+     */
+    protected function redirect($url)
+    {
+        \header("Location: $url");
+        exit();
+    }
 }
