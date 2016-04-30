@@ -8,7 +8,6 @@ use Grain\EventDispatcher;
 
 class Core
 {
-    private $routes = array();
     private $config = array();
     private $router;
     private $container;
@@ -43,7 +42,7 @@ class Core
     public function handle($requestPath, $method)
     {
         // find the route that matches the request
-        $matchedRoute = $this->router->matcher($this->routes, $requestPath, $method);
+        $matchedRoute = $this->router->matcher($requestPath, $method);
 
         $this->eventDispatcher->dispatch("core.post_request");
 
@@ -76,7 +75,8 @@ class Core
         // add the global configuration to the controller and execute
         $controllerClass->setConfig($this->config);
         $controllerClass->setContainer($this->container)
-            ->setEventDispatcher($this->eventDispatcher);
+            ->setEventDispatcher($this->eventDispatcher)
+            ->setRouter($this->router);
         $response = $controllerClass->$controllerMethod($parameters);
 
         // handle array controller responses as JSON responses
@@ -100,10 +100,11 @@ class Core
      * @param string $routePath
      * @param string $method
      * @param string $controller
+     * @param string $routeName
      *
      * @return Core
      */
-    public function map($routePath, $method, $controller)
+    public function map($routePath, $method, $controller, $routeName)
     {
         $parametersPosition = array();
 
@@ -116,13 +117,14 @@ class Core
             $parameters = $matches[1];
         }
 
-        $this->routes[] = array(
+        $this->router->addRoute(array(
             "path" => $routePath,
             "method" => $method,
             "controller" => $controller,
             "parameters" => $parameters,
-            "parameterPositions" => $parametersPosition
-        );
+            "parameterPositions" => $parametersPosition,
+            "routeName" => $routeName
+        ));
 
         return $this;
     }

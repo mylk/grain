@@ -11,8 +11,9 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $testConfig = array();
         $core = new Core($testConfig);
         
-        $core->map("/", "GET", "MyProject:User:edit");
+        $core->map("/", "GET", "MyProject:User:edit", "testRoute");
         
+        $router = $this->readAttribute($core, "router");
         $this->assertEquals(
             array(
                 array(
@@ -20,10 +21,11 @@ class CoreTest extends \PHPUnit_Framework_TestCase
                     "method" => "GET",
                     "controller" => "MyProject:User:edit",
                     "parameters" => array(),
-                    "parameterPositions" =>  array()
+                    "parameterPositions" => array(),
+                    "routeName" => "testRoute"
                 )
             ),
-            $this->readAttribute($core, "routes")
+            $this->readAttribute($router, "routes")
         );
     }
     
@@ -32,8 +34,9 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $testConfig = array();
         $core = new Core($testConfig);
         
-        $core->map("/{id}", "GET", "MyProject:User:edit");
+        $core->map("/{id}", "GET", "MyProject:User:edit", "testRoute");
         
+        $router = $this->readAttribute($core, "router");
         $this->assertEquals(
             array(
                 array(
@@ -41,10 +44,11 @@ class CoreTest extends \PHPUnit_Framework_TestCase
                     "method" => "GET",
                     "controller" => "MyProject:User:edit",
                     "parameters" => array("id"),
-                    "parameterPositions" =>  array(1)
+                    "parameterPositions" => array(1),
+                    "routeName" => "testRoute"
                 )
             ),
-            $this->readAttribute($core, "routes")
+            $this->readAttribute($router, "routes")
         );
     }
     
@@ -53,8 +57,9 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $testConfig = array();
         $core = new Core($testConfig);
         
-        $core->map("/{id}/edit", "GET", "MyProject:User:edit");
+        $core->map("/{id}/edit", "GET", "MyProject:User:edit", "testRoute");
         
+        $router = $this->readAttribute($core, "router");
         $this->assertEquals(
             array(
                 array(
@@ -62,10 +67,11 @@ class CoreTest extends \PHPUnit_Framework_TestCase
                     "method" => "GET",
                     "controller" => "MyProject:User:edit",
                     "parameters" => array("id"),
-                    "parameterPositions" =>  array(1)
+                    "parameterPositions" => array(1),
+                    "routeName" => "testRoute"
                 )
             ),
-            $this->readAttribute($core, "routes")
+            $this->readAttribute($router, "routes")
         );
     }
     
@@ -74,8 +80,9 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $testConfig = array();
         $core = new Core($testConfig);
         
-        $core->map("/user/{id}/edit", "GET", "MyProject:User:edit");
+        $core->map("/user/{id}/edit", "GET", "MyProject:User:edit", "testRoute");
         
+        $router = $this->readAttribute($core, "router");
         $this->assertEquals(
             array(
                 array(
@@ -83,10 +90,11 @@ class CoreTest extends \PHPUnit_Framework_TestCase
                     "method" => "GET",
                     "controller" => "MyProject:User:edit",
                     "parameters" => array("id"),
-                    "parameterPositions" =>  array(2)
+                    "parameterPositions" => array(2),
+                    "routeName" => "testRoute"
                 )
             ),
-            $this->readAttribute($core, "routes")
+            $this->readAttribute($router, "routes")
         );
     }
     
@@ -95,8 +103,9 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $testConfig = array();
         $core = new Core($testConfig);
         
-        $core->map("/user/edit/{id}", "GET", "MyProject:User:edit");
+        $core->map("/user/edit/{id}", "GET", "MyProject:User:edit", "testRoute");
         
+        $router = $this->readAttribute($core, "router");
         $this->assertEquals(
             array(
                 array(
@@ -104,10 +113,11 @@ class CoreTest extends \PHPUnit_Framework_TestCase
                     "method" => "GET",
                     "controller" => "MyProject:User:edit",
                     "parameters" => array("id"),
-                    "parameterPositions" =>  array(3)
+                    "parameterPositions" => array(3),
+                    "routeName" => "testRoute"
                 )
             ),
-            $this->readAttribute($core, "routes")
+            $this->readAttribute($router, "routes")
         );
     }
     
@@ -116,8 +126,9 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $testConfig = array();
         $core = new Core($testConfig);
         
-        $core->map("/user/edit/{id}/{version}", "GET", "MyProject:User:edit");
+        $core->map("/user/edit/{id}/{version}", "GET", "MyProject:User:edit", "testRoute");
         
+        $router = $this->readAttribute($core, "router");
         $this->assertEquals(
             array(
                 array(
@@ -125,10 +136,11 @@ class CoreTest extends \PHPUnit_Framework_TestCase
                     "method" => "GET",
                     "controller" => "MyProject:User:edit",
                     "parameters" => array("id", "version"),
-                    "parameterPositions" =>  array(3, 4)
+                    "parameterPositions" => array(3, 4),
+                    "routeName" => "testRoute"
                 )
             ),
-            $this->readAttribute($core, "routes")
+            $this->readAttribute($router, "routes")
         );
     }
     
@@ -140,7 +152,7 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $testConfig = array();
         $core = new Core($testConfig);
         
-        $response = $core->handle("/", "GET");
+        $response = $core->handle("/", "GET", "testRoute");
         
         $this->assertEquals("Route not found.", $response);
     }

@@ -6,6 +6,7 @@ use Grain\Router;
 
 class RouterTest extends \PHPUnit_Framework_TestCase
 {
+    private $router;
     private $routes = array(
         array(
             "path" => "/",
@@ -43,57 +44,56 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             "parameterPositions" => array(3)
         )
     );
-    
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->router = new Router();
+
+        foreach ($this->routes as $route) {
+            $this->router->addRoute($route);
+        }
+    }
+
     public function testRouterRequestWithoutParameters()
     {
-        $router = new Router();
-        
-        $matchedRoute = $router->matcher($this->routes, "/", "GET");
+        $matchedRoute = $this->router->matcher("/", "GET");
         
         $this->assertEquals($this->findRouteByPath("/"), $matchedRoute);
     }
 
     public function testRouterRequestOnlyOneParameter()
     {
-        $router = new Router();
-        
-        $matchedRoute = $router->matcher($this->routes, "/1", "GET");
+        $matchedRoute = $this->router->matcher("/1", "GET");
         
         $this->assertEquals($this->findRouteByPath("/{id}"), $matchedRoute);
     }
     
     public function testRouterRequestBeginningParameter()
     {
-        $router = new Router();
-        
-        $matchedRoute = $router->matcher($this->routes, "/1/edit", "GET");
+        $matchedRoute = $this->router->matcher("/1/edit", "GET");
         
         $this->assertEquals($this->findRouteByPath("/{id}/edit"), $matchedRoute);
     }
     
     public function testRouterRequestMiddleParameter()
     {
-        $router = new Router();
-        
-        $matchedRoute = $router->matcher($this->routes, "/user/1/edit", "GET");
+        $matchedRoute = $this->router->matcher("/user/1/edit", "GET");
         
         $this->assertEquals($this->findRouteByPath("/user/{id}/edit"), $matchedRoute);
     }
     
     public function testRouterRequestEndParameter()
     {
-        $router = new Router();
-        
-        $matchedRoute = $router->matcher($this->routes, "/user/edit/1", "GET");
+        $matchedRoute = $this->router->matcher("/user/edit/1", "GET");
         
         $this->assertEquals($this->findRouteByPath("/user/edit/{id}"), $matchedRoute);
     }
 
     public function testRouterNonExistentRoute()
     {
-        $router = new Router();
-        
-        $matchedRoute = $router->matcher($this->routes, "/a/mess", "GET");
+        $matchedRoute = $this->router->matcher("/a/mess", "GET");
         
         $this->assertEquals(null, $matchedRoute);
     }
@@ -103,9 +103,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetPathParameterPositions($routePath, $parameterPositions)
     {
-        $router = new Router();
-
-        $this->assertEquals($parameterPositions, $router->getPathParameterPositions($routePath));
+        $this->assertEquals($parameterPositions, $this->router->getPathParameterPositions($routePath));
     }
 
     public function getRoutePaths()
@@ -124,11 +122,11 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     private function findRouteByPath($path)
     {
         $route = \array_filter($this->routes, function ($element) use ($path) {
-            return $element["path"] === $path;
+            return $path === $element["path"];
         });
 
         $route = \array_values($route);
 
-        return ($route) ? $route[0] : false;
+        return ($route) ? $route[0] : null;
     }
 }

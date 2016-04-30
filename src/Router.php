@@ -4,19 +4,34 @@ namespace Grain;
 
 class Router
 {
+    private $routes = array();
+
+    /**
+     * Adds a new route
+     *
+     * @param array $route
+     *
+     * @return Router
+     */
+    public function addRoute($route)
+    {
+        $this->routes[] = $route;
+
+        return $this;
+    }
+
     /**
      * Checks if a request url matches to any routes and returns
      * the matched route along with its description
      *
-     * @param array $routes
      * @param string $requestPath
      * @param string $method
      *
      * @return array | null
      */
-    public function matcher($routes, $requestPath, $method)
+    public function matcher($requestPath, $method)
     {
-        foreach ($routes as $route) {
+        foreach ($this->routes as $route) {
             // replace the parameter positions of the request url with regex
             $requestPathRegex = $this->buildRequestPathRegex($requestPath, $route);
             
@@ -52,6 +67,33 @@ class Router
         }
 
         return $parametersPos;
+    }
+
+    /**
+     * Returns the url of a route path by its name
+     *
+     * @param string $routeName
+     * @param array $parameters
+     *
+     * @return string $url
+     */
+    public function generateUrl($routeName, $parameters = array())
+    {
+        $route = \array_filter($this->routes, function ($element) use ($routeName) {
+            return $routeName === $element["routeName"];
+        });
+
+        $route = \array_values($route);
+        $routePath = $route ? $route[0]["path"] : null;
+        if (!$routePath) {
+            return null;
+        }
+
+        foreach ($parameters as $key => $value) {
+            $routePath = \str_replace("{{$key}}", $value, $routePath);
+        }
+
+        return $routePath;
     }
 
     /**

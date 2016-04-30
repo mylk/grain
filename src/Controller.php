@@ -5,11 +5,14 @@ namespace Grain;
 use Grain\Database;
 use Grain\Container;
 use Grain\EventDispatcher;
+use Grain\Router;
 
 abstract class Controller
 {
     private $config;
     private $container;
+    private $eventDispatcher;
+    private $router;
 
     /**
      * Stores the database configurations in a private variable.
@@ -120,6 +123,20 @@ abstract class Controller
     }
 
     /**
+     * Sets the router
+     *
+     * @param Router $router
+     *
+     * @return Controller
+     */
+    public function setRouter(Router $router)
+    {
+        $this->router = $router;
+
+        return $this;
+    }
+
+    /**
      * Redirects to the given url
      *
      * @param string $url
@@ -128,5 +145,18 @@ abstract class Controller
     {
         \header("Location: $url");
         exit();
+    }
+
+    /**
+     * Returns the url of a route path by its name
+     *
+     * @param string $routeName
+     * @param array $parameters
+     *
+     * @return string
+     */
+    public function generateUrl($routeName, $parameters = array())
+    {
+        return $this->router->generateUrl($routeName, $parameters);
     }
 }
