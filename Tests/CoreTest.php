@@ -11,11 +11,13 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $testConfig = array();
         $core = new Core($testConfig);
         
-        $core->map("/", "MyProject:User:edit");
+        $core->map("/", "GET", "MyProject:User:edit");
         
         $this->assertEquals(
             array(
-                "/" => array(
+                array(
+                    "path" => "/",
+                    "method" => "GET",
                     "controller" => "MyProject:User:edit",
                     "parameters" => array(),
                     "parameterPositions" =>  array()
@@ -30,11 +32,13 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $testConfig = array();
         $core = new Core($testConfig);
         
-        $core->map("/{id}", "MyProject:User:edit");
+        $core->map("/{id}", "GET", "MyProject:User:edit");
         
         $this->assertEquals(
             array(
-                "/{id}" => array(
+                array(
+                    "path" => "/{id}",
+                    "method" => "GET",
                     "controller" => "MyProject:User:edit",
                     "parameters" => array("id"),
                     "parameterPositions" =>  array(1)
@@ -49,11 +53,13 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $testConfig = array();
         $core = new Core($testConfig);
         
-        $core->map("/{id}/edit", "MyProject:User:edit");
+        $core->map("/{id}/edit", "GET", "MyProject:User:edit");
         
         $this->assertEquals(
             array(
-                "/{id}/edit" => array(
+                array(
+                    "path" => "/{id}/edit",
+                    "method" => "GET",
                     "controller" => "MyProject:User:edit",
                     "parameters" => array("id"),
                     "parameterPositions" =>  array(1)
@@ -68,11 +74,13 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $testConfig = array();
         $core = new Core($testConfig);
         
-        $core->map("/user/{id}/edit", "MyProject:User:edit");
+        $core->map("/user/{id}/edit", "GET", "MyProject:User:edit");
         
         $this->assertEquals(
             array(
-                "/user/{id}/edit" => array(
+                array(
+                    "path" => "/user/{id}/edit",
+                    "method" => "GET",
                     "controller" => "MyProject:User:edit",
                     "parameters" => array("id"),
                     "parameterPositions" =>  array(2)
@@ -87,11 +95,13 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $testConfig = array();
         $core = new Core($testConfig);
         
-        $core->map("/user/edit/{id}", "MyProject:User:edit");
+        $core->map("/user/edit/{id}", "GET", "MyProject:User:edit");
         
         $this->assertEquals(
             array(
-                "/user/edit/{id}" => array(
+                array(
+                    "path" => "/user/edit/{id}",
+                    "method" => "GET",
                     "controller" => "MyProject:User:edit",
                     "parameters" => array("id"),
                     "parameterPositions" =>  array(3)
@@ -106,11 +116,13 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $testConfig = array();
         $core = new Core($testConfig);
         
-        $core->map("/user/edit/{id}/{version}", "MyProject:User:edit");
+        $core->map("/user/edit/{id}/{version}", "GET", "MyProject:User:edit");
         
         $this->assertEquals(
             array(
-                "/user/edit/{id}/{version}" => array(
+                array(
+                    "path" => "/user/edit/{id}/{version}",
+                    "method" => "GET",
                     "controller" => "MyProject:User:edit",
                     "parameters" => array("id", "version"),
                     "parameterPositions" =>  array(3, 4)
@@ -128,7 +140,7 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $testConfig = array();
         $core = new Core($testConfig);
         
-        $response = $core->handle("/");
+        $response = $core->handle("/", "GET");
         
         $this->assertEquals("Route not found.", $response);
     }

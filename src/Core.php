@@ -36,13 +36,14 @@ class Core
      * If there is no matched route, it returns a canned response with 404 status.
      *
      * @param string $requestPath
+     * @param string $method
      *
      * @return string
      */
-    public function handle($requestPath)
+    public function handle($requestPath, $method)
     {
         // find the route that matches the request
-        $matchedRoute = $this->router->matcher($this->routes, $requestPath);
+        $matchedRoute = $this->router->matcher($this->routes, $requestPath, $method);
 
         $this->eventDispatcher->dispatch("core.post_request");
 
@@ -97,11 +98,12 @@ class Core
      * the route's description.
      *
      * @param string $routePath
+     * @param string $method
      * @param string $controller
      *
      * @return Core
      */
-    public function map($routePath, $controller)
+    public function map($routePath, $method, $controller)
     {
         $parametersPosition = array();
 
@@ -114,7 +116,9 @@ class Core
             $parameters = $matches[1];
         }
 
-        $this->routes[$routePath] = array(
+        $this->routes[] = array(
+            "path" => $routePath,
+            "method" => $method,
             "controller" => $controller,
             "parameters" => $parameters,
             "parameterPositions" => $parametersPosition

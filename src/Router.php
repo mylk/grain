@@ -7,20 +7,24 @@ class Router
     /**
      * Checks if a request url matches to any routes and returns
      * the matched route along with its description
-     * 
+     *
      * @param array $routes
      * @param string $requestPath
-     * 
+     * @param string $method
+     *
      * @return array | null
      */
-    public function matcher($routes, $requestPath)
+    public function matcher($routes, $requestPath, $method)
     {
-        foreach ($routes as $routePath => $settings) {
+        foreach ($routes as $route) {
             // replace the parameter positions of the request url with regex
-            $requestPathRegex = $this->buildRequestPathRegex($requestPath, $settings);
+            $requestPathRegex = $this->buildRequestPathRegex($requestPath, $route);
             
-            if (\preg_match($requestPathRegex, $routePath)) {
-                return $routes[$routePath];
+            if (
+                \preg_match($requestPathRegex, $route["path"])
+                && $method === $route["method"]
+            ) {
+                return $route;
             }
         }
         
