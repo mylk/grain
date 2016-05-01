@@ -9,12 +9,29 @@ class Router
     /**
      * Adds a new route
      *
+     * Also, searches a route path for pararmeter placeholders
+     * and adds them to the route's description.
+     *
      * @param array $route
      *
      * @return Router
      */
     public function addRoute($route)
     {
+        $parametersPosition = array();
+
+        $matches = array();
+        \preg_match_all("/\{(.*?)\}/", $route["path"], $matches);
+
+        $parameters = array();
+        if (\count($matches) > 0) {
+            $parametersPosition = $this->getPathParameterPositions($route["path"]);
+            $parameters = $matches[1];
+        }
+
+        $route["parameters"] = $parameters;
+        $route["parameterPositions"] = $parametersPosition;
+
         $this->routes[] = $route;
 
         return $this;

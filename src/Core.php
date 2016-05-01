@@ -94,8 +94,6 @@ class Core
      * Maps the route paths to controllers.
      *
      * It is used by the front controller to register routes and controllers.
-     * Also, it searches a route path for pararmeter placeholder and populates
-     * the route's description.
      *
      * @param string $routePath
      * @param string $method
@@ -106,23 +104,10 @@ class Core
      */
     public function map($routePath, $method, $controller, $routeName)
     {
-        $parametersPosition = array();
-
-        $matches = array();
-        \preg_match_all("/\{(.*?)\}/", $routePath, $matches);
-
-        $parameters = array();
-        if (\count($matches) > 0) {
-            $parametersPosition = $this->router->getPathParameterPositions($routePath);
-            $parameters = $matches[1];
-        }
-
         $this->router->addRoute(array(
             "path" => $routePath,
             "method" => $method,
             "controller" => $controller,
-            "parameters" => $parameters,
-            "parameterPositions" => $parametersPosition,
             "routeName" => $routeName
         ));
 
