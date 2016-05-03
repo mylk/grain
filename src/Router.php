@@ -48,6 +48,9 @@ class Router
      */
     public function matcher($requestPath, $method)
     {
+        $requestPathParsed = \parse_url($requestPath);
+        $requestPath = isset($requestPathParsed["path"]) ? $requestPathParsed["path"] : $requestPath;
+
         foreach ($this->routes as $route) {
             // replace the parameter positions of the request url with regex
             $requestPathRegex = $this->buildRequestPathRegex($requestPath, $route);
