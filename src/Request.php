@@ -17,6 +17,7 @@ class Request
      */
     public function getParameters($requestPath, $matchedRoute)
     {
+        $requestDataArray = array();
         $requestPathElements = \explode("/", $requestPath);
         
         $requestParameters = array();
@@ -32,6 +33,13 @@ class Request
         $requestData = \file_get_contents("php://input");
         if ($requestData) {
             \parse_str($requestData, $requestDataArray);
+            $request = \array_merge($request, $requestDataArray);
+        }
+
+        // get data set in the url query
+        $requestPathParsed = \parse_url($requestPath);
+        if (isset($requestPathParsed["query"])) {
+            \parse_str($requestPathParsed["query"], $requestDataArray);
             $request = \array_merge($request, $requestDataArray);
         }
 
