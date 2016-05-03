@@ -15,7 +15,7 @@ abstract class Controller
     private $router;
 
     /**
-     * Stores the database configurations in a private variable.
+     * Sets the application configuration.
      *
      * @param array $config
      *
@@ -29,7 +29,7 @@ abstract class Controller
     }
 
     /**
-     * Returns the database configurations.
+     * Gets the application configuration.
      *
      * @return array
      */
