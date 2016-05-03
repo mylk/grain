@@ -12,10 +12,11 @@ class Request
      * 
      * @param string $requestPath
      * @param array $matchedRoute
+     * @param string $contentType
      * 
      * @return array $request
      */
-    public function getParameters($requestPath, $matchedRoute)
+    public function getParameters($requestPath, $matchedRoute, $contentType)
     {
         $requestDataArray = array();
         $requestPathElements = \explode("/", $requestPath);
@@ -40,6 +41,12 @@ class Request
         $requestPathParsed = \parse_url($requestPath);
         if (isset($requestPathParsed["query"])) {
             \parse_str($requestPathParsed["query"], $requestDataArray);
+            $request = \array_merge($request, $requestDataArray);
+        }
+
+        // get data if request is of application/json content type
+        if ("application/json" === $contentType) {
+            $requestDataArray = \json_decode($requestData, true);
             $request = \array_merge($request, $requestDataArray);
         }
 

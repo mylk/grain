@@ -13,7 +13,7 @@ class RequestTests extends \PHPUnit_Framework_TestCase
             "controller" => "MyProject:MyController",
             "parameters" => array(),
             "parameterPositions" => array()
-        ));
+        ), "");
         
         $this->assertEquals(array(), $parameters);
     }
@@ -25,7 +25,7 @@ class RequestTests extends \PHPUnit_Framework_TestCase
             "controller" => "MyProject:MyController",
             "parameters" => array("id"),
             "parameterPositions" => array(1)
-        ));
+        ), "");
         
         $this->assertEquals(array("id" => 1), $parameters);
     }
@@ -37,7 +37,7 @@ class RequestTests extends \PHPUnit_Framework_TestCase
             "controller" => "MyProject:MyController",
             "parameters" => array("id"),
             "parameterPositions" => array(1)
-        ));
+        ), "");
         
         $this->assertEquals(array("id" => 1), $parameters);
     }
@@ -49,7 +49,7 @@ class RequestTests extends \PHPUnit_Framework_TestCase
             "controller" => "MyProject:MyController",
             "parameters" => array("id"),
             "parameterPositions" => array(2)
-        ));
+        ), "");
         
         $this->assertEquals(array("id" => 1), $parameters);
     }
@@ -61,7 +61,7 @@ class RequestTests extends \PHPUnit_Framework_TestCase
             "controller" => "MyProject:MyController",
             "parameters" => array("id"),
             "parameterPositions" => array(3)
-        ));
+        ), "");
         
         $this->assertEquals(array("id" => 1), $parameters);
     }

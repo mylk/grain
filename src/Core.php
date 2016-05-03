@@ -36,10 +36,11 @@ class Core
      *
      * @param string $requestPath
      * @param string $method
+     * @param string $contentType
      *
      * @return string
      */
-    public function handle($requestPath, $method)
+    public function handle($requestPath, $method, $contentType)
     {
         // find the route that matches the request
         $matchedRoute = $this->router->matcher($requestPath, $method);
@@ -57,7 +58,7 @@ class Core
 
         // get the request parameters
         $request = new Request();
-        $parameters = $request->getParameters($requestPath, $matchedRoute);
+        $parameters = $request->getParameters($requestPath, $matchedRoute, $contentType);
 
         // prepare and instanciate the route's controller class
         $controller = $matchedRoute["controller"];
