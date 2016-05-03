@@ -48,7 +48,7 @@ class Container
 
         // requested service exists in services definition file
         $className = $this->definitions[$name]["class"];
-        $dependencies = $this->definitions[$name]["dependencies"];
+        $dependencies = isset($this->definitions[$name]["dependencies"]) ? $this->definitions[$name]["dependencies"] : array();
 
         // if the service has not been initialized yet
         if (!isset($this->container[$className])) {
