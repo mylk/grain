@@ -4,18 +4,18 @@ namespace Grain;
 
 class Container
 {
-    private $definitions;
+    private $definitions = array();
     private $container;
     
     /**
      * Loads the service definitions file.
      * 
-     * @param string $serviceDefinitions
+     * @param array $serviceDefinitions
      * @return boolean|void
      * @throws Exception
      */
     public function loadDefinitions($serviceDefinitions)
-    {        
+    {
         if (\is_array($serviceDefinitions) && empty($serviceDefinitions)) {
             return false;
         } elseif (!$serviceDefinitions) {
@@ -39,6 +39,7 @@ class Container
      * @param string $name The name of the service
      * 
      * @return object
+     * @throws Exception
      */
     public function __get($name)
     {
