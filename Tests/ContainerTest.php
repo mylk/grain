@@ -113,14 +113,14 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $container = new Container();
         $container->loadDefinitions(array(
             "Service" => array(
-                "class" => MockService::class,
+                "class" => "Grain\Tests\MockService",
                 "dependencies" => array(),
                 "public" => true
             )
         ));
 
         $service = $container->Service;
-        $this->assertInstanceOf(MockService::class, $service);
+        $this->assertInstanceOf("Grain\Tests\MockService", $service);
     }
 
     public function testGetNotInitializedServiceWithNotInitializedDependencies()
@@ -128,19 +128,19 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $container = new Container();
         $container->loadDefinitions(array(
             "Service" => array(
-                "class" => MockServiceWithDependency::class,
+                "class" => "Grain\Tests\MockServiceWithDependency",
                 "dependencies" => array("Dependency"),
                 "public" => true
             ),
             "Dependency" => array(
-                "class" => MockDependency::class,
+                "class" => "Grain\Tests\MockDependency",
                 "dependencies" => array(),
                 "public" => true
             )
         ));
 
         $service = $container->Service;
-        $this->assertInstanceOf(MockServiceWithDependency::class, $service);
+        $this->assertInstanceOf("Grain\Tests\MockServiceWithDependency", $service);
     }
 
     public function testGetNotInitializedServiceWithInitializedDependencies()
@@ -148,12 +148,12 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $container = new Container();
         $container->loadDefinitions(array(
             "Service" => array(
-                "class" => MockServiceWithDependency::class,
+                "class" => "Grain\Tests\MockServiceWithDependency",
                 "dependencies" => array("Dependency"),
                 "public" => true
             ),
             "Dependency" => array(
-                "class" => MockDependency::class,
+                "class" => "Grain\Tests\MockDependency",
                 "dependencies" => array(),
                 "public" => true
             )
@@ -161,13 +161,13 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 
         // initialize the dependency
         $dependency = $container->Dependency;
-        $this->assertInstanceOf(MockDependency::class, $dependency);
+        $this->assertInstanceOf("Grain\Tests\MockDependency", $dependency);
 
         $service = $container->Service;
-        $this->assertInstanceOf(MockServiceWithDependency::class, $service);
+        $this->assertInstanceOf("Grain\Tests\MockServiceWithDependency", $service);
 
         $dependencyFromService = $this->readAttribute($service, "dependency");
-        $this->assertInstanceOf(MockDependency::class, $dependencyFromService);
+        $this->assertInstanceOf("Grain\Tests\MockDependency", $dependencyFromService);
         $this->assertSame($dependency, $dependencyFromService);
     }
 
@@ -176,17 +176,17 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $container = new Container();
         $container->loadDefinitions(array(
             "Service" => array(
-                "class" => MockService::class,
+                "class" => "Grain\Tests\MockService",
                 "dependencies" => array(),
                 "public" => true
             )
         ));
 
         $serviceFirst = $container->Service;
-        $this->assertInstanceOf(MockService::class, $serviceFirst);
+        $this->assertInstanceOf("Grain\Tests\MockService", $serviceFirst);
 
         $serviceSecond = $container->Service;
-        $this->assertInstanceOf(MockService::class, $serviceSecond);
+        $this->assertInstanceOf("Grain\Tests\MockService", $serviceSecond);
 
         $this->assertSame($serviceFirst, $serviceSecond);
     }
@@ -199,12 +199,12 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $container = new Container();
         $container->loadDefinitions(array(
             "Service" => array(
-                "class" => MockServiceWithDependency::class,
+                "class" => "Grain\Tests\MockServiceWithDependency",
                 "dependencies" => array("Dependency"),
                 "public" => true
             ),
             "Dependency" => array(
-                "class" => MockDependency::class,
+                "class" => "Grain\Tests\MockDependency",
                 "dependencies" => array(),
                 "public" => false
             )
@@ -218,12 +218,12 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $container = new Container();
         $container->loadDefinitions(array(
             "Service" => array(
-                "class" => MockService::class,
+                "class" => "Grain\Tests\MockService",
                 "public" => true
             )
         ));
 
         $serviceFirst = $container->Service;
-        $this->assertInstanceOf(MockService::class, $serviceFirst);
+        $this->assertInstanceOf("Grain\Tests\MockService", $serviceFirst);
     }
 }
