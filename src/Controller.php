@@ -9,7 +9,7 @@ use Grain\Router;
 
 abstract class Controller
 {
-    private $config;
+    private $config = array();
     private $container;
     private $eventDispatcher;
     private $router;
@@ -43,10 +43,17 @@ abstract class Controller
      *
      * @param string $databaseName
      *
-     * @return \PDO
+     * @return \PDO|null
      */
     protected function getDb($databaseName)
     {
+        if (
+            !isset($this->config["mysql"])
+            || !isset($this->config["mysql"][$databaseName])
+        ) {
+            return null;
+        }
+
         $config = $this->config["mysql"][$databaseName];
 
         $database = new Database($config);
