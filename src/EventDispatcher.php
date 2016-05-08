@@ -35,23 +35,35 @@ class EventDispatcher
      *
      * @param string $eventName
      *
-     * @return boolean|void
+     * @return boolean
      */
     public function dispatch($eventName)
     {
-        $listeners = $this->definitions[$eventName];
-        if (!$listeners) {
+        $results = array();
+
+        if (!isset($this->definitions[$eventName])) {
             return false;
         }
 
         $listenerMethod = $this->getListenerMethodName($eventName);
 
+        $listeners = $this->definitions[$eventName];
+
         foreach ($listeners as $listener) {
             if (\class_exists($listener["class"]) && \method_exists($listener["class"], $listenerMethod)) {
                 $listener = new $listener["class"]();
                 $listener->$listenerMethod();
+            } else {
+                $results[] = false;
             }
         }
+
+        // if any listener class or any listener method did not exist, return false
+        if (\in_array(false, $results)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
