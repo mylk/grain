@@ -2,6 +2,8 @@
 
 namespace Grain\Tests;
 
+use Grain\Router;
+
 class ControllerTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetDbConfigurationDoesNotExist()
@@ -16,11 +18,37 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testGenerateUrlForNonExistingRoute()
     {
-        $this->markTestIncomplete();
+        $router = new Router();
+        $controller = new MockStringController();
+
+        $router->addRoute(array(
+            "path" => "/",
+            "method" => "GET",
+            "controller" => "MyProject:User:edit",
+            "routeName" => "testRoute"
+        ));
+
+        $controller->setRouter($router);
+        $url = $controller->generateUrl("anotherTestRoute");
+
+        $this->assertNull($url);
     }
 
     public function testGenerateUrlForExistingRoute()
     {
-        $this->markTestIncomplete();
+        $router = new Router();
+        $controller = new MockStringController();
+
+        $router->addRoute(array(
+            "path" => "/",
+            "method" => "GET",
+            "controller" => "MyProject:User:edit",
+            "routeName" => "testRoute"
+        ));
+
+        $controller->setRouter($router);
+        $url = $controller->generateUrl("testRoute");
+
+        $this->assertEquals("/", $url);
     }
 }
