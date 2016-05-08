@@ -11,37 +11,47 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         array(
             "path" => "/",
             "method" => "GET",
-            "controller" => "MyProject:MyController",
+            "controller" => "MyProject:MyController:index",
             "parameters" => array(),
-            "parameterPositions" => array()
+            "parameterPositions" => array(),
+            "controllerClassName" => "MyProject\Controller\MyControllerController",
+            "controllerActionName" => "indexAction"
         ),
         array(
             "path" => "/{id}",
             "method" => "GET",
-            "controller" => "MyProject:MyController",
+            "controller" => "MyProject:MyController:index",
             "parameters" => array("id"),
-            "parameterPositions" => array(1)
+            "parameterPositions" => array(1),
+            "controllerClassName" => "MyProject\Controller\MyControllerController",
+            "controllerActionName" => "indexAction"
         ),
         array(
             "path" => "/{id}/edit",
             "method" => "GET",
-            "controller" => "MyProject:MyController",
+            "controller" => "MyProject:MyController:index",
             "parameters" => array("id"),
-            "parameterPositions" => array(1)
+            "parameterPositions" => array(1),
+            "controllerClassName" => "MyProject\Controller\MyControllerController",
+            "controllerActionName" => "indexAction"
         ),
         array(
             "path" => "/user/{id}/edit",
             "method" => "GET",
-            "controller" => "MyProject:MyController",
+            "controller" => "MyProject:MyController:index",
             "parameters" => array("id"),
-            "parameterPositions" => array(2)
+            "parameterPositions" => array(2),
+            "controllerClassName" => "MyProject\Controller\MyControllerController",
+            "controllerActionName" => "indexAction"
         ),
         array(
             "path" => "/user/edit/{id}",
             "method" => "GET",
-            "controller" => "MyProject:MyController",
+            "controller" => "MyProject:MyController:index",
             "parameters" => array("id"),
-            "parameterPositions" => array(3)
+            "parameterPositions" => array(3),
+            "controllerClassName" => "MyProject\Controller\MyControllerController",
+            "controllerActionName" => "indexAction"
         )
     );
 
@@ -190,7 +200,9 @@ class RouterTest extends \PHPUnit_Framework_TestCase
                     "controller" => "MyProject:User:edit",
                     "parameters" => array(),
                     "parameterPositions" => array(),
-                    "routeName" => "testRoute"
+                    "routeName" => "testRoute",
+                    "controllerClassName" => "MyProject\Controller\UserController",
+                    "controllerActionName" => "editAction"
                 )
             ),
             $this->readAttribute($router, "routes")
@@ -216,7 +228,9 @@ class RouterTest extends \PHPUnit_Framework_TestCase
                     "controller" => "MyProject:User:edit",
                     "parameters" => array("id"),
                     "parameterPositions" => array(1),
-                    "routeName" => "testRoute"
+                    "routeName" => "testRoute",
+                    "controllerClassName" => "MyProject\Controller\UserController",
+                    "controllerActionName" => "editAction"
                 )
             ),
             $this->readAttribute($router, "routes")
@@ -242,7 +256,9 @@ class RouterTest extends \PHPUnit_Framework_TestCase
                     "controller" => "MyProject:User:edit",
                     "parameters" => array("id"),
                     "parameterPositions" => array(1),
-                    "routeName" => "testRoute"
+                    "routeName" => "testRoute",
+                    "controllerClassName" => "MyProject\Controller\UserController",
+                    "controllerActionName" => "editAction"
                 )
             ),
             $this->readAttribute($router, "routes")
@@ -268,7 +284,9 @@ class RouterTest extends \PHPUnit_Framework_TestCase
                     "controller" => "MyProject:User:edit",
                     "parameters" => array("id"),
                     "parameterPositions" => array(2),
-                    "routeName" => "testRoute"
+                    "routeName" => "testRoute",
+                    "controllerClassName" => "MyProject\Controller\UserController",
+                    "controllerActionName" => "editAction"
                 )
             ),
             $this->readAttribute($router, "routes")
@@ -294,7 +312,9 @@ class RouterTest extends \PHPUnit_Framework_TestCase
                     "controller" => "MyProject:User:edit",
                     "parameters" => array("id"),
                     "parameterPositions" => array(3),
-                    "routeName" => "testRoute"
+                    "routeName" => "testRoute",
+                    "controllerClassName" => "MyProject\Controller\UserController",
+                    "controllerActionName" => "editAction"
                 )
             ),
             $this->readAttribute($router, "routes")
@@ -320,7 +340,9 @@ class RouterTest extends \PHPUnit_Framework_TestCase
                     "controller" => "MyProject:User:edit",
                     "parameters" => array("id", "version"),
                     "parameterPositions" => array(3, 4),
-                    "routeName" => "testRoute"
+                    "routeName" => "testRoute",
+                    "controllerClassName" => "MyProject\Controller\UserController",
+                    "controllerActionName" => "editAction"
                 )
             ),
             $this->readAttribute($router, "routes")

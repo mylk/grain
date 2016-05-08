@@ -60,16 +60,9 @@ class Core
         $request = new Request();
         $parameters = $request->getParameters($requestPath, $matchedRoute, $contentType);
 
-        // prepare and instanciate the route's controller class
-        $controller = $matchedRoute["controller"];
-        $controllerArray = \explode(":", $controller);
-
-        $projectName = $controllerArray[0];
-        $controllerName = $controllerArray[1];
-        $actionName = $controllerArray[2];
-
-        $className = "$projectName\\Controller\\{$controllerName}Controller";
-        $controllerMethod = "{$actionName}Action";
+        // instanciate the route's controller class
+        $className = $matchedRoute["controllerClassName"];
+        $methodName = $matchedRoute["controllerActionName"];
 
         $controllerClass = new $className();
 
@@ -78,7 +71,7 @@ class Core
         $controllerClass->setContainer($this->container)
             ->setEventDispatcher($this->eventDispatcher)
             ->setRouter($this->router);
-        $response = $controllerClass->$controllerMethod($parameters);
+        $response = $controllerClass->$methodName($parameters);
 
         // handle array controller responses as JSON responses
         if (\gettype($response) === "array") {

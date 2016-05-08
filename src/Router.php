@@ -29,6 +29,15 @@ class Router
             $parameters = $matches[1];
         }
 
+        // prepare route's controller class and method
+        $controller = $route["controller"];
+        $controllerArray = \explode(":", $controller);
+        $projectName = $controllerArray[0];
+        $controllerName = $controllerArray[1];
+        $actionName = $controllerArray[2];
+        $route["controllerClassName"] = "$projectName\\Controller\\{$controllerName}Controller";
+        $route["controllerActionName"] = "{$actionName}Action";
+
         $route["parameters"] = $parameters;
         $route["parameterPositions"] = $parametersPosition;
 
