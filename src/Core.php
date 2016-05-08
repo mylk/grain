@@ -118,7 +118,7 @@ class Core
     /**
      * Initializes the container and sets the service definitions
      *
-     * @param type $serviceDefinitions
+     * @param array $serviceDefinitions
      *
      * @return Core
      */
@@ -133,7 +133,7 @@ class Core
     /**
      * Initializes the event dispatcher and sets the service definitions
      *
-     * @param type $serviceDefinitions
+     * @param array $serviceDefinitions
      *
      * @return Core
      */
