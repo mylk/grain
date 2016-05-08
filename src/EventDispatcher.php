@@ -100,11 +100,12 @@ class EventDispatcher
     {
         // strip the event name, usually prefixed with a "class name"
         // like "core", for internal framework events
-        $eventName = \end(\explode(".", $eventNameFull));
+        $eventNameFullParsed = \explode(".", $eventNameFull);
+        $eventName = \end($eventNameFullParsed);
 
         $eventNameSpaced = \str_replace("_", " ", $eventName);
 
-        $methodName = "on" . \str_replace(" ", "", (\ucwords($eventNameSpaced)));
+        $methodName = "on" . \str_replace(" ", "", \ucwords($eventNameSpaced));
 
         return $methodName;
     }
