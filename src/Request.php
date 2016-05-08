@@ -31,11 +31,7 @@ class Request
         $request = \array_combine($matchedRoute["parameters"], $requestParameters);
 
         // get any data sent with the request
-        $requestData = \file_get_contents("php://input");
-        if ($requestData) {
-            \parse_str($requestData, $requestDataArray);
-            $request = \array_merge($request, $requestDataArray);
-        }
+        $requestData = $this->getRawData();
 
         // get data set in the url query
         $requestPathParsed = \parse_url($requestPath);
@@ -45,11 +41,28 @@ class Request
         }
 
         // get data if request is of application/json content type
-        if ("application/json" === $contentType) {
-            $requestDataArray = \json_decode($requestData, true);
-            $request = \array_merge($request, $requestDataArray);
+        if ($requestData) {
+            if ("application/json" === $contentType) {
+                $requestDataArray = \json_decode($requestData, true);
+                $request = \array_merge($request, $requestDataArray);
+            } else {
+                \parse_str($requestData, $requestDataArray);
+                $request = \array_merge($request, $requestDataArray);
+            }
         }
 
         return $request;
+    }
+
+    /**
+     * Returns the data sent with the request.
+     *
+     * Isolated for testability reasons.
+     *
+     * @return string|null
+     */
+    protected function getRawData()
+    {
+        return \file_get_contents("php://input");
     }
 }
