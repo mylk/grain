@@ -1,0 +1,16 @@
+---
+engines:
+  phpmd:
+    enabled: true
+    exclude_fingerprints:
+      # exclude issues about test suites having more than 10 public methods
+      - b71c94fd2782cda05dea7d90ef6d1530
+      - 72191571ed5c7548814a98c43c2e18b8
+      - faf3031aebd32cfa72fbca7ff5f79aa2
+  duplication:
+    enabled: true
+    config:
+      languages:
+        - php
+  fixme:
+    enabled: true

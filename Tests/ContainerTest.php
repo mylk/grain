@@ -166,9 +166,9 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $service = $container->Service;
         $this->assertInstanceOf("Grain\Tests\MockServiceWithDependency", $service);
 
-        $dependencyFromService = $this->readAttribute($service, "dependency");
-        $this->assertInstanceOf("Grain\Tests\MockDependency", $dependencyFromService);
-        $this->assertSame($dependency, $dependencyFromService);
+        $dependencyService = $this->readAttribute($service, "dependency");
+        $this->assertInstanceOf("Grain\Tests\MockDependency", $dependencyService);
+        $this->assertSame($dependency, $dependencyService);
     }
 
     public function testGetInitializedServiceWithoutDependencies()
@@ -210,7 +210,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
             )
         ));
 
-        $service = $container->Service;
+        $container->Service;
     }
 
     public function testServiceMissingDependenciesFromDefinitions()
