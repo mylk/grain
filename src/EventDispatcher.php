@@ -4,7 +4,7 @@ namespace Grain;
 
 class EventDispatcher
 {
-    private $definitions;
+    private $definitions = array();
 
     /**
      * Loads the service definitions file.
@@ -23,9 +23,7 @@ class EventDispatcher
 
         // get only event listener definitions
         foreach ($definitions as $definition) {
-            if (isset($definition["events"])) {
-                $this->groupByEvent($definition);
-            }
+            $this->groupByEvent($definition);
         }
     }
 
@@ -65,6 +63,10 @@ class EventDispatcher
      */
     private function groupByEvent($definition)
     {
+        if (!isset($definition["events"])) {
+            return;
+        }
+
         foreach ($definition["events"] as $event) {
             if (!isset($this->definitions[$event])) {
                 $this->definitions[$event] = array();
@@ -78,7 +80,7 @@ class EventDispatcher
      * Gets the method name to be called on event listeners
      * according to the given event name.
      *
-     * @param type $eventNameFull
+     * @param string $eventNameFull
      *
      * @return string
      */
