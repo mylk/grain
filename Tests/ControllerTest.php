@@ -23,7 +23,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
         $router->addRoute(array(
             "path" => "/",
-            "method" => "GET",
+            "methods" => array("GET"),
             "controller" => "MyProject:User:edit",
             "routeName" => "testRoute"
         ));
@@ -41,7 +41,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
         $router->addRoute(array(
             "path" => "/",
-            "method" => "GET",
+            "methods" => array("GET"),
             "controller" => "MyProject:User:edit",
             "routeName" => "testRoute"
         ));

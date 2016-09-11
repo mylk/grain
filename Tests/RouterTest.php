@@ -10,7 +10,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     private $routes = array(
         array(
             "path" => "/",
-            "method" => "GET",
+            "methods" => array("GET"),
             "controller" => "MyProject:MyController:index",
             "parameters" => array(),
             "parameterPositions" => array(),
@@ -19,7 +19,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         ),
         array(
             "path" => "/{id}",
-            "method" => "GET",
+            "methods" => array("GET"),
             "controller" => "MyProject:MyController:index",
             "parameters" => array("id"),
             "parameterPositions" => array(1),
@@ -28,7 +28,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         ),
         array(
             "path" => "/{id}/edit",
-            "method" => "GET",
+            "methods" => array("GET"),
             "controller" => "MyProject:MyController:index",
             "parameters" => array("id"),
             "parameterPositions" => array(1),
@@ -37,7 +37,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         ),
         array(
             "path" => "/user/{id}/edit",
-            "method" => "GET",
+            "methods" => array("GET"),
             "controller" => "MyProject:MyController:index",
             "parameters" => array("id"),
             "parameterPositions" => array(2),
@@ -46,13 +46,22 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         ),
         array(
             "path" => "/user/edit/{id}",
-            "method" => "GET",
+            "methods" => array("GET"),
             "controller" => "MyProject:MyController:index",
             "parameters" => array("id"),
             "parameterPositions" => array(3),
             "controllerClassName" => "MyProject\Controller\MyControllerController",
             "controllerActionName" => "indexAction"
-        )
+        ),
+        array(
+            "path" => "/multiple/methods",
+            "methods" => array("GET", "POST"),
+            "controller" => "MyProject:MyController:index",
+            "parameters" => array(),
+            "parameterPositions" => array(),
+            "controllerClassName" => "MyProject\Controller\MyControllerController",
+            "controllerActionName" => "indexAction"
+        ),
     );
 
     public function setUp()
@@ -70,6 +79,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     {
         $matchedRoute = $this->router->matcher("/", "GET");
 
+        $this->assertNotNull($matchedRoute);
         $this->assertEquals($this->findRouteByPath("/"), $matchedRoute);
     }
 
@@ -77,6 +87,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     {
         $matchedRoute = $this->router->matcher("/1", "GET");
 
+        $this->assertNotNull($matchedRoute);
         $this->assertEquals($this->findRouteByPath("/{id}"), $matchedRoute);
     }
 
@@ -84,6 +95,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     {
         $matchedRoute = $this->router->matcher("/1/edit", "GET");
 
+        $this->assertNotNull($matchedRoute);
         $this->assertEquals($this->findRouteByPath("/{id}/edit"), $matchedRoute);
     }
 
@@ -91,6 +103,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     {
         $matchedRoute = $this->router->matcher("/user/1/edit", "GET");
 
+        $this->assertNotNull($matchedRoute);
         $this->assertEquals($this->findRouteByPath("/user/{id}/edit"), $matchedRoute);
     }
 
@@ -98,12 +111,36 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     {
         $matchedRoute = $this->router->matcher("/user/edit/1", "GET");
 
+        $this->assertNotNull($matchedRoute);
         $this->assertEquals($this->findRouteByPath("/user/edit/{id}"), $matchedRoute);
     }
 
     public function testMatcherNonExistingRoute()
     {
         $matchedRoute = $this->router->matcher("/a/mess", "GET");
+
+        $this->assertEquals(null, $matchedRoute);
+    }
+
+    public function testMatcherRouteWithMultipleParametersMatchFirst()
+    {
+        $matchedRoute = $this->router->matcher("/multiple/methods", "GET");
+
+        $this->assertNotNull($matchedRoute);
+        $this->assertEquals($this->findRouteByPath("/multiple/methods"), $matchedRoute);
+    }
+
+    public function testMatcherRouteWithMultipleParametersMatchSecond()
+    {
+        $matchedRoute = $this->router->matcher("/multiple/methods", "POST");
+
+        $this->assertNotNull($matchedRoute);
+        $this->assertEquals($this->findRouteByPath("/multiple/methods"), $matchedRoute);
+    }
+
+    public function testMatcherRouteWithMultipleParametersNoMatch()
+    {
+        $matchedRoute = $this->router->matcher("/multiple/methods", "OPTIONS");
 
         $this->assertEquals(null, $matchedRoute);
     }
@@ -123,7 +160,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
         $router->addRoute(array(
             "path" => "/",
-            "method" => "GET",
+            "methods" => "GET",
             "controller" => "MyProject:User:edit",
             "routeName" => "testRoute"
         ));
@@ -139,7 +176,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
         $router->addRoute(array(
             "path" => "/",
-            "method" => "GET",
+            "methods" => "GET",
             "controller" => "MyProject:User:edit",
             "routeName" => "testRoute"
         ));
@@ -155,7 +192,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
         $router->addRoute(array(
             "path" => "/{id}",
-            "method" => "GET",
+            "methods" => "GET",
             "controller" => "MyProject:User:edit",
             "routeName" => "testRoute"
         ));
@@ -171,7 +208,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
         $router->addRoute(array(
             "path" => "/user/edit/{id}/{version}",
-            "method" => "GET",
+            "methods" => "GET",
             "controller" => "MyProject:User:edit",
             "routeName" => "testRoute"
         ));
@@ -187,7 +224,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
         $router->addRoute(array(
             "path" => "/",
-            "method" => "GET",
+            "methods" => "GET",
             "controller" => "MyProject:User:edit",
             "routeName" => "testRoute"
         ));
@@ -196,7 +233,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             array(
                 array(
                     "path" => "/",
-                    "method" => "GET",
+                    "methods" => array("GET"),
                     "controller" => "MyProject:User:edit",
                     "parameters" => array(),
                     "parameterPositions" => array(),
@@ -215,7 +252,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
         $router->addRoute(array(
             "path" => "/{id}",
-            "method" => "GET",
+            "methods" => "GET",
             "controller" => "MyProject:User:edit",
             "routeName" => "testRoute"
         ));
@@ -224,7 +261,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             array(
                 array(
                     "path" => "/{id}",
-                    "method" => "GET",
+                    "methods" => array("GET"),
                     "controller" => "MyProject:User:edit",
                     "parameters" => array("id"),
                     "parameterPositions" => array(1),
@@ -243,7 +280,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
         $router->addRoute(array(
             "path" => "/{id}/edit",
-            "method" => "GET",
+            "methods" => "GET",
             "controller" => "MyProject:User:edit",
             "routeName" => "testRoute"
         ));
@@ -252,7 +289,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             array(
                 array(
                     "path" => "/{id}/edit",
-                    "method" => "GET",
+                    "methods" => array("GET"),
                     "controller" => "MyProject:User:edit",
                     "parameters" => array("id"),
                     "parameterPositions" => array(1),
@@ -271,7 +308,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
         $router->addRoute(array(
             "path" => "/user/{id}/edit",
-            "method" => "GET",
+            "methods" => "GET",
             "controller" => "MyProject:User:edit",
             "routeName" => "testRoute"
         ));
@@ -280,7 +317,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             array(
                 array(
                     "path" => "/user/{id}/edit",
-                    "method" => "GET",
+                    "methods" => array("GET"),
                     "controller" => "MyProject:User:edit",
                     "parameters" => array("id"),
                     "parameterPositions" => array(2),
@@ -299,7 +336,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
         $router->addRoute(array(
             "path" => "/user/edit/{id}",
-            "method" => "GET",
+            "methods" => "GET",
             "controller" => "MyProject:User:edit",
             "routeName" => "testRoute"
         ));
@@ -308,7 +345,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             array(
                 array(
                     "path" => "/user/edit/{id}",
-                    "method" => "GET",
+                    "methods" => array("GET"),
                     "controller" => "MyProject:User:edit",
                     "parameters" => array("id"),
                     "parameterPositions" => array(3),
@@ -327,7 +364,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
         $router->addRoute(array(
             "path" => "/user/edit/{id}/{version}",
-            "method" => "GET",
+            "methods" => "GET",
             "controller" => "MyProject:User:edit",
             "routeName" => "testRoute"
         ));
@@ -336,7 +373,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             array(
                 array(
                     "path" => "/user/edit/{id}/{version}",
-                    "method" => "GET",
+                    "methods" => array("GET"),
                     "controller" => "MyProject:User:edit",
                     "parameters" => array("id", "version"),
                     "parameterPositions" => array(3, 4),

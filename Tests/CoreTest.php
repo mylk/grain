@@ -21,7 +21,7 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $route = $this->readAttribute($router, "routes")[0];
 
         $this->assertEquals("/", $route["path"]);
-        $this->assertEquals("GET", $route["method"]);
+        $this->assertEquals(array("GET"), $route["methods"]);
         $this->assertEquals("MyProject:User:edit", $route["controller"]);
         $this->assertEquals("testRoute", $route["routeName"]);
     }
@@ -51,7 +51,7 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $routesProperty->setValue($router, array(
             array(
                 "path" => "/",
-                "method" => "GET",
+                "methods" => array("GET"),
                 "controllerClassName" => "Grain\Tests\MockStringController",
                 "controllerActionName" => "indexAction",
                 "parameters" => array(),
@@ -84,7 +84,7 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $routesProperty->setValue($router, array(
             array(
                 "path" => "/",
-                "method" => "GET",
+                "methods" => array("GET"),
                 "controllerClassName" => "Grain\Tests\MockArrayController",
                 "controllerActionName" => "indexAction",
                 "parameters" => array(),
@@ -103,5 +103,104 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $response = $core->handle("/", "GET", "text/plain");
 
         $this->assertEquals(array("value1" => 1, "value2" => 2), \json_decode($response, true));
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testHandleRequestForExistentRouteWithMultipleMethodsMatchingFirst()
+    {
+        $router = new Router();
+        $routerReflection = new \ReflectionClass($router);
+        $routesProperty = $routerReflection->getProperty("routes");
+        $routesProperty->setAccessible(true);
+        $routesProperty->setValue($router, array(
+            array(
+                "path" => "/",
+                "methods" => array("GET", "POST"),
+                "controllerClassName" => "Grain\Tests\MockStringController",
+                "controllerActionName" => "indexAction",
+                "parameters" => array(),
+                "parameterPositions" => array(),
+                "routeName" => "testRoute"
+            )
+        ));
+
+        $testConfig = array();
+        $core = new Core($testConfig);
+        $coreReflection = new \ReflectionClass($core);
+        $routerProperty = $coreReflection->getProperty("router");
+        $routerProperty->setAccessible(true);
+        $routerProperty->setValue($core, $router);
+
+        $response = $core->handle("/", "GET", "text/plain");
+
+        $this->assertEquals("string", $response);
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testHandleRequestForExistentRouteWithMultipleMethodsMatchingSecond()
+    {
+        $router = new Router();
+        $routerReflection = new \ReflectionClass($router);
+        $routesProperty = $routerReflection->getProperty("routes");
+        $routesProperty->setAccessible(true);
+        $routesProperty->setValue($router, array(
+            array(
+                "path" => "/",
+                "methods" => array("GET", "POST"),
+                "controllerClassName" => "Grain\Tests\MockStringController",
+                "controllerActionName" => "indexAction",
+                "parameters" => array(),
+                "parameterPositions" => array(),
+                "routeName" => "testRoute"
+            )
+        ));
+
+        $testConfig = array();
+        $core = new Core($testConfig);
+        $coreReflection = new \ReflectionClass($core);
+        $routerProperty = $coreReflection->getProperty("router");
+        $routerProperty->setAccessible(true);
+        $routerProperty->setValue($core, $router);
+
+        $response = $core->handle("/", "POST", "text/plain");
+
+        $this->assertEquals("string", $response);
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testHandleRequestForNonExistentRouteWithMultipleMethods()
+    {
+        $router = new Router();
+        $routerReflection = new \ReflectionClass($router);
+        $routesProperty = $routerReflection->getProperty("routes");
+        $routesProperty->setAccessible(true);
+        $routesProperty->setValue($router, array(
+            array(
+                "path" => "/",
+                "methods" => array("GET", "POST"),
+                "controllerClassName" => "Grain\Tests\MockStringController",
+                "controllerActionName" => "indexAction",
+                "parameters" => array(),
+                "parameterPositions" => array(),
+                "routeName" => "testRoute"
+            )
+        ));
+
+        $testConfig = array();
+        $core = new Core($testConfig);
+        $coreReflection = new \ReflectionClass($core);
+        $routerProperty = $coreReflection->getProperty("router");
+        $routerProperty->setAccessible(true);
+        $routerProperty->setValue($core, $router);
+
+        $response = $core->handle("/", "OPTIONS", "text/plain");
+
+        $this->assertEquals("Route not found.", $response);
     }
 }

@@ -90,17 +90,17 @@ class Core
      * It is used by the front controller to register routes and controllers.
      *
      * @param string $routePath
-     * @param string $method
+     * @param string $methods
      * @param string $controller
      * @param string $routeName
      *
      * @return Core
      */
-    public function map($routePath, $method, $controller, $routeName)
+    public function map($routePath, $methods, $controller, $routeName)
     {
         $this->router->addRoute(array(
             "path" => $routePath,
-            "method" => $method,
+            "methods" => $methods,
             "controller" => $controller,
             "routeName" => $routeName
         ));

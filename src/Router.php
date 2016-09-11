@@ -9,7 +9,7 @@ class Router
     /**
      * Adds a new route
      *
-     * Also, searches a route path for pararmeter placeholders
+     * Also, searches a route path for parameter placeholders
      * and adds them to the route's description.
      *
      * @param array $route
@@ -37,6 +37,10 @@ class Router
         $actionName = $controllerArray[2];
         $route["controllerClassName"] = "$projectName\\Controller\\{$controllerName}Controller";
         $route["controllerActionName"] = "{$actionName}Action";
+
+        if (\gettype($route["methods"]) === "string") {
+            $route["methods"] = array($route["methods"]);
+        }
 
         $route["parameters"] = $parameters;
         $route["parameterPositions"] = $parametersPosition;
@@ -66,7 +70,7 @@ class Router
             
             if (
                 \preg_match($requestPathRegex, $route["path"])
-                && $method === $route["method"]
+                && \in_array($method, $route["methods"])
             ) {
                 return $route;
             }
