@@ -2,23 +2,49 @@
 
 namespace Grain\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Grain\Core;
 use Grain\Router;
+use Grain\Container;
+use Grain\EventDispatcher;
 
 require __DIR__ . "/Mocks/Controller/MockStringController.php";
 require __DIR__ . "/Mocks/Controller/MockArrayController.php";
 
-class CoreTest extends \PHPUnit_Framework_TestCase
+class CoreTest extends TestCase
 {
-    public function testMap()
+    public function testGetRouterReturnsRouter(): void
+    {
+        $testConfig = array();
+        $core = new Core($testConfig);
+
+        $this->assertEquals(new Router(), $core->getRouter());
+    }
+
+    public function testGetContainerReturnsContainer(): void
+    {
+        $testConfig = array();
+        $core = new Core($testConfig);
+
+        $this->assertEquals(new Container(), $core->getContainer());
+    }
+
+    public function testGetEventDispatcherReturnsEventDispatcher(): void
+    {
+        $testConfig = array();
+        $core = new Core($testConfig);
+
+        $this->assertEquals(new EventDispatcher(), $core->getEventDispatcher());
+    }
+
+    public function testMap(): void
     {
         $testConfig = array();
         $core = new Core($testConfig);
 
         $core->map("/", "GET", "MyProject:User:edit", "testRoute");
 
-        $router = $this->readAttribute($core, "router");
-        $route = $this->readAttribute($router, "routes")[0];
+        $route = $core->getRouter()->getRoutes()[0];
 
         $this->assertEquals("/", $route["path"]);
         $this->assertEquals(array("GET"), $route["methods"]);
@@ -29,7 +55,7 @@ class CoreTest extends \PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testHandleRequestForNonExistentRoute()
+    public function testHandleRequestForNonExistentRoute(): void
     {
         $testConfig = array();
         $core = new Core($testConfig);
@@ -42,7 +68,7 @@ class CoreTest extends \PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testHandleRequestForExistingRouteReturningString()
+    public function testHandleRequestForExistingRouteReturningString(): void
     {
         $router = new Router();
         $routerReflection = new \ReflectionClass($router);
@@ -75,9 +101,9 @@ class CoreTest extends \PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testHandleRequestForExistingRouteReturningArray()
+    public function testHandleRequestForExistingRouteReturningArray(): void
     {
-      $router = new Router();
+        $router = new Router();
         $routerReflection = new \ReflectionClass($router);
         $routesProperty = $routerReflection->getProperty("routes");
         $routesProperty->setAccessible(true);
@@ -108,7 +134,7 @@ class CoreTest extends \PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testHandleRequestForExistentRouteWithMultipleMethodsMatchingFirst()
+    public function testHandleRequestForExistentRouteWithMultipleMethodsMatchingFirst(): void
     {
         $router = new Router();
         $routerReflection = new \ReflectionClass($router);
@@ -141,7 +167,7 @@ class CoreTest extends \PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testHandleRequestForExistentRouteWithMultipleMethodsMatchingSecond()
+    public function testHandleRequestForExistentRouteWithMultipleMethodsMatchingSecond(): void
     {
         $router = new Router();
         $routerReflection = new \ReflectionClass($router);
@@ -174,7 +200,7 @@ class CoreTest extends \PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testHandleRequestForNonExistentRouteWithMultipleMethods()
+    public function testHandleRequestForNonExistentRouteWithMultipleMethods(): void
     {
         $router = new Router();
         $routerReflection = new \ReflectionClass($router);

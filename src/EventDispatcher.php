@@ -7,11 +7,21 @@ class EventDispatcher
     private $definitions = array();
 
     /**
+     * Returns the defined services
+     *
+     * @return array
+     */
+    public function getDefinitions()
+    {
+        return $this->definitions;
+    }
+
+    /**
      * Loads the service definitions file.
      *
-     * @param type $definitions
+     * @param array|null $definitions
      * @return boolean|void
-     * @throws Exception
+     * @throws \Exception
      */
     public function loadDefinitions($definitions)
     {

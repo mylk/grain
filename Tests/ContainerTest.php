@@ -2,6 +2,7 @@
 
 namespace Grain\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Grain\Container;
 
 // require the mocks for testing the container
@@ -9,13 +10,33 @@ require __DIR__ . "/Mocks/Container/MockService.php";
 require __DIR__ . "/Mocks/Container/MockServiceWithDependency.php";
 require __DIR__ . "/Mocks/Container/MockDependency.php";
 
-class ContainerTest extends \PHPUnit_Framework_TestCase
+class ContainerTest extends TestCase
 {
-    /**
-     * @expectedException Exception
-     */
-    public function testLoadDefinitionsInvalidDefinitions()
+    public function testGetDefinitionsReturnsEmptyDefinitionsWhenNotSet(): void
     {
+        $container = new Container();
+        $this->assertEmpty($container->getDefinitions());
+    }
+
+    public function testGetDefinitionsReturnsDefinitionsWhenSet(): void
+    {
+        $container = new Container();
+
+        $container->loadDefinitions(array(
+            "TestService" => array(
+                "class" => "TestApp\Service\TestService",
+                "dependencies" => array()
+            )
+        ));
+
+        $definitions = $container->getDefinitions();
+        $this->assertNotEmpty($definitions);
+    }
+
+    public function testLoadDefinitionsInvalidDefinitions(): void
+    {
+        $this->expectException(\Exception::class);
+
         $container = new Container();
 
         // this is what is normally done in the front controllers
@@ -23,7 +44,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $container->loadDefinitions($definitions);
     }
 
-    public function testLoadDefinitionsEmptyDefinitions()
+    public function testLoadDefinitionsEmptyDefinitions(): void
     {
         $container = new Container();
 
@@ -34,7 +55,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($result);
     }
 
-    public function testLoadDefinitionsMissingPublic()
+    public function testLoadDefinitionsMissingPublic(): void
     {
         $container = new Container();
         $container->loadDefinitions(array(
@@ -44,12 +65,10 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
             )
         ));
 
-        $definitions = $this->readAttribute($container, "definitions");
-
-        $this->assertCount(1, $definitions);
+        $this->assertCount(1, $container->getDefinitions());
     }
 
-    public function testLoadDefinitionsPublicService()
+    public function testLoadDefinitionsPublicService(): void
     {
         $container = new Container();
         $container->loadDefinitions(array(
@@ -60,12 +79,10 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
             )
         ));
 
-        $definitions = $this->readAttribute($container, "definitions");
-
-        $this->assertCount(1, $definitions);
+        $this->assertCount(1, $container->getDefinitions());
     }
 
-    public function testLoadDefinitionsNonPublicService()
+    public function testLoadDefinitionsNonPublicService(): void
     {
         $container = new Container();
         $container->loadDefinitions(array(
@@ -76,26 +93,22 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
             )
         ));
 
-        $definitions = $this->readAttribute($container, "definitions");
-
-        $this->assertCount(0, $definitions);
+        $this->assertCount(0, $container->getDefinitions());
     }
 
-    /**
-     * @expectedException Exception
-     */
-    public function testGetWhileNoDefinitionsExist()
+    public function testGetWhileNoDefinitionsExist(): void
     {
+        $this->expectException(\Exception::class);
+
         $container = new Container();
 
         $container->testService;
     }
 
-    /**
-     * @expectedException Exception
-     */
-    public function testGetNotDefinedService()
+    public function testGetNotDefinedService(): void
     {
+        $this->expectException(\Exception::class);
+
         $container = new Container();
         $container->loadDefinitions(array(
             "TestService" => array(
@@ -108,7 +121,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $container->TestService;
     }
 
-    public function testGetNotInitializedServiceWithoutDependencies()
+    public function testGetNotInitializedServiceWithoutDependencies(): void
     {
         $container = new Container();
         $container->loadDefinitions(array(
@@ -123,7 +136,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf("Grain\Tests\MockService", $service);
     }
 
-    public function testGetNotInitializedServiceWithNotInitializedDependencies()
+    public function testGetNotInitializedServiceWithNotInitializedDependencies(): void
     {
         $container = new Container();
         $container->loadDefinitions(array(
@@ -143,7 +156,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf("Grain\Tests\MockServiceWithDependency", $service);
     }
 
-    public function testGetNotInitializedServiceWithInitializedDependencies()
+    public function testGetNotInitializedServiceWithInitializedDependencies(): void
     {
         $container = new Container();
         $container->loadDefinitions(array(
@@ -166,12 +179,12 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $service = $container->Service;
         $this->assertInstanceOf("Grain\Tests\MockServiceWithDependency", $service);
 
-        $dependencyService = $this->readAttribute($service, "dependency");
+        $dependencyService = $service->getDependency();
         $this->assertInstanceOf("Grain\Tests\MockDependency", $dependencyService);
         $this->assertSame($dependency, $dependencyService);
     }
 
-    public function testGetInitializedServiceWithoutDependencies()
+    public function testGetInitializedServiceWithoutDependencies(): void
     {
         $container = new Container();
         $container->loadDefinitions(array(
@@ -191,11 +204,10 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($serviceFirst, $serviceSecond);
     }
 
-    /**
-     * @expectedException Exception
-     */
-    public function testGetNotInitializedServiceWithNonPublicDependencies()
+    public function testGetNotInitializedServiceWithNonPublicDependencies(): void
     {
+        $this->expectException(\Exception::class);
+
         $container = new Container();
         $container->loadDefinitions(array(
             "Service" => array(
@@ -213,7 +225,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $container->Service;
     }
 
-    public function testServiceMissingDependenciesFromDefinitions()
+    public function testServiceMissingDependenciesFromDefinitions(): void
     {
         $container = new Container();
         $container->loadDefinitions(array(

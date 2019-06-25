@@ -2,21 +2,22 @@
 
 namespace Grain\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Grain\Router;
 
-class ControllerTest extends \PHPUnit_Framework_TestCase
+class ControllerTest extends TestCase
 {
-    public function testGetDbConfigurationDoesNotExist()
+    public function testGetDbConfigurationDoesNotExist(): void
     {
         $this->markTestIncomplete();
     }
 
-    public function testGetDbConfigurationExists()
+    public function testGetDbConfigurationExists(): void
     {
         $this->markTestIncomplete();
     }
 
-    public function testGenerateUrlForNonExistingRoute()
+    public function testGenerateUrlForNonExistingRoute(): void
     {
         $router = new Router();
         $controller = new MockStringController();
@@ -34,7 +35,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($url);
     }
 
-    public function testGenerateUrlForExistingRoute()
+    public function testGenerateUrlForExistingRoute(): void
     {
         $router = new Router();
         $controller = new MockStringController();

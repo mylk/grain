@@ -2,11 +2,12 @@
 
 namespace Grain\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Grain\Request;
 
-class RequestTests extends \PHPUnit_Framework_TestCase
+class RequestTests extends TestCase
 {
-    public function testGetParametersNoParameters()
+    public function testGetParametersNoParameters(): void
     {
         $request = new Request();
         $parameters = $request->getParameters("/", array(
@@ -18,7 +19,7 @@ class RequestTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array(), $parameters);
     }
 
-    public function testGetParametersParameterOneAndOnly()
+    public function testGetParametersParameterOneAndOnly(): void
     {
         $request = new Request();
         $parameters = $request->getParameters("/1", array(
@@ -30,7 +31,7 @@ class RequestTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array("id" => 1), $parameters);
     }
 
-    public function testGetParametersParameterBeginning()
+    public function testGetParametersParameterBeginning(): void
     {
         $request = new Request();
         $parameters = $request->getParameters("/1/edit", array(
@@ -42,7 +43,7 @@ class RequestTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array("id" => 1), $parameters);
     }
 
-    public function testGetParametersParameterMiddle()
+    public function testGetParametersParameterMiddle(): void
     {
         $request = new Request();
         $parameters = $request->getParameters("/user/1/edit", array(
@@ -54,7 +55,7 @@ class RequestTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array("id" => 1), $parameters);
     }
 
-    public function testGetParametersParameterEnd()
+    public function testGetParametersParameterEnd(): void
     {
         $request = new Request();
         $parameters = $request->getParameters("/user/edit/1", array(
@@ -66,7 +67,7 @@ class RequestTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array("id" => 1), $parameters);
     }
 
-    public function testGetParametersParameterData()
+    public function testGetParametersParameterData(): void
     {
         $request = new Request();
 
@@ -79,11 +80,14 @@ class RequestTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array("parameter" => "1"), $parameters);
     }
 
-    public function testGetParametersPostData()
+    public function testGetParametersPostData(): void
     {
-        $request = $this->getMock("Grain\Request", array("getRawData"));
+        $request = $this
+            ->getMockBuilder(Request::class)
+            ->setMethods(array("getRawData"))
+            ->getMock();
         $request->method("getRawData")
-            ->will($this->returnValue("parameter=1"));
+            ->willReturn("parameter=1");
 
         $parameters = $request->getParameters("/user", array(
             "controller" => "MyProject:MyController",
@@ -94,11 +98,14 @@ class RequestTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array("parameter" => "1"), $parameters);
     }
 
-    public function testGetParametersPostJsonData()
+    public function testGetParametersPostJsonData(): void
     {
-        $request = $this->getMock("Grain\Request", array("getRawData"));
+        $request = $this
+            ->getMockBuilder(Request::class)
+            ->setMethods(array("getRawData"))
+            ->getMock();
         $request->method("getRawData")
-            ->will($this->returnValue("{\"parameter\":\"1\"}"));
+            ->willReturn("{\"parameter\":\"1\"}");
 
         $parameters = $request->getParameters("/user", array(
             "controller" => "MyProject:MyController",

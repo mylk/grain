@@ -6,21 +6,21 @@ class Request
 {
     /**
      * Extracts the parameter values from the request path.
-     * 
+     *
      * Parameter positions in the requested URLs are based
      * on the pattern of the defined routes.
-     * 
+     *
      * @param string $requestPath
      * @param array $matchedRoute
      * @param string $contentType
-     * 
+     *
      * @return array $request
      */
     public function getParameters($requestPath, $matchedRoute, $contentType)
     {
         $requestDataArray = array();
         $requestPathElements = \explode("/", $requestPath);
-        
+
         $requestParameters = array();
         foreach ($matchedRoute["parameterPositions"] as $parameterPosition) {
             $requestParameters[] = $requestPathElements[$parameterPosition];
@@ -57,11 +57,9 @@ class Request
     /**
      * Returns the data sent with the request.
      *
-     * Isolated for testability reasons.
-     *
      * @return string|null
      */
-    protected function getRawData()
+    public function getRawData()
     {
         return \file_get_contents("php://input");
     }

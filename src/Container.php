@@ -6,13 +6,23 @@ class Container
 {
     private $definitions = array();
     private $container;
-    
+
+    /**
+     * Returns the defined services
+     *
+     * @return array
+     */
+    public function getDefinitions()
+    {
+        return $this->definitions;
+    }
+
     /**
      * Loads the service definitions file.
-     * 
+     *
      * @param array $serviceDefinitions
      * @return boolean|void
-     * @throws Exception
+     * @throws \Exception
      */
     public function loadDefinitions($serviceDefinitions)
     {
@@ -32,14 +42,14 @@ class Container
             }
         }
     }
-    
+
     /**
      * The magic method that gets called when a service is requested
-     * 
+     *
      * @param string $name The name of the service
-     * 
+     *
      * @return object
-     * @throws Exception
+     * @throws \Exception
      */
     public function __get($name)
     {

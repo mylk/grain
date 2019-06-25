@@ -7,6 +7,16 @@ class Router
     private $routes = array();
 
     /**
+     * Returns the routes added
+     *
+     * @return array
+     */
+    public function getRoutes()
+    {
+        return $this->routes;
+    }
+
+    /**
      * Adds a new route
      *
      * Also, searches a route path for parameter placeholders
@@ -67,7 +77,7 @@ class Router
         foreach ($this->routes as $route) {
             // replace the parameter positions of the request url with regex
             $requestPathRegex = $this->buildRequestPathRegex($requestPath, $route);
-            
+
             if (
                 \preg_match($requestPathRegex, $route["path"])
                 && \in_array($method, $route["methods"])
@@ -75,14 +85,14 @@ class Router
                 return $route;
             }
         }
-        
+
         return null;
     }
 
     /**
      * Finds the positions of parameters in a route path.
      *
-     * @param type $routePath
+     * @param string $routePath
      *
      * @return array
      */

@@ -14,6 +14,36 @@ class Core
     private $eventDispatcher;
 
     /**
+     * Returns the router
+     *
+     * @return \Grain\Router|null
+     */
+    public function getRouter()
+    {
+        return $this->router;
+    }
+
+    /**
+     * Returns the container
+     *
+     * @return \Grain\Container|null
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
+     * Returns the event dispatcher
+     *
+     * @return \Grain\EventDispatcher|null
+     */
+    public function getEventDispatcher()
+    {
+        return $this->eventDispatcher;
+    }
+
+    /**
      * Used to pass the application parametets to the controllers and instanciate required classes.
      *
      * Core is being instanciated from the front controller.

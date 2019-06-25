@@ -2,41 +2,42 @@
 
 namespace Grain\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Grain\Database;
 
-class DatabaseTest extends \PHPUnit_Framework_TestCase
+class DatabaseTest extends TestCase
 {
-    public function testConnectToDatabaseServer()
+    public function testConnectToDatabaseServer(): void
     {
         $this->markTestIncomplete();
     }
 
-    public function testDisconnectFromDatabaseServer()
+    public function testDisconnectFromDatabaseServer(): void
     {
         $this->markTestIncomplete();
     }
 
-    public function testExecuteInvalidQuery()
+    public function testExecuteInvalidQuery(): void
     {
         $this->markTestIncomplete();
     }
 
-    public function testExecuteNotExistingTable()
+    public function testExecuteNotExistingTable(): void
     {
         $this->markTestIncomplete();
     }
 
-    public function testExecuteNoResult()
+    public function testExecuteNoResult(): void
     {
         $this->markTestIncomplete();
     }
 
-    public function testExecuteSingleResult()
+    public function testExecuteSingleResult(): void
     {
         $this->markTestIncomplete();
     }
 
-    public function testExecuteMultipleResults()
+    public function testExecuteMultipleResults(): void
     {
         $this->markTestIncomplete();
     }

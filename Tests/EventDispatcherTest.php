@@ -2,18 +2,39 @@
 
 namespace Grain\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Grain\EventDispatcher;
 
 // require the mocks for testing the event dispatcher
 require __DIR__ . "/Mocks/EventDispatcher/MockEventListener.php";
 
-class EventDispatcherTest extends \PHPUnit_Framework_TestCase
+class EventDispatcherTest extends TestCase
 {
-    /**
-     * @expectedException Exception
-     */
-    public function testLoadDefinitionsInvalidDefinitions()
+    public function testGetDefinitionsReturnsEmptyDefinitionsWhenNotSet(): void
     {
+        $eventDispatcher = new EventDispatcher();
+        $this->assertEmpty($eventDispatcher->getDefinitions());
+    }
+
+    public function testGetDefinitionsReturnsDefinitionsWhenSet(): void
+    {
+        $eventDispatcher = new EventDispatcher();
+
+        $eventDispatcher->loadDefinitions(array(
+            "TestEventListener" => array(
+                "class" => "TestApp\EventListener\TestEventListner",
+                "events" => array("core.post_request")
+            )
+        ));
+
+        $definitions = $eventDispatcher->getDefinitions();
+        $this->assertNotEmpty($definitions);
+    }
+
+    public function testLoadDefinitionsInvalidDefinitions(): void
+    {
+        $this->expectException(\Exception::class);
+
         $container = new EventDispatcher();
 
         // this is what is normally done in the front controllers
@@ -21,7 +42,7 @@ class EventDispatcherTest extends \PHPUnit_Framework_TestCase
         $container->loadDefinitions($definitions);
     }
 
-    public function testLoadDefinitionsEmptyDefinitions()
+    public function testLoadDefinitionsEmptyDefinitions(): void
     {
         $container = new EventDispatcher();
 
@@ -32,7 +53,7 @@ class EventDispatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($result);
     }
 
-    public function testLoadDefinitionsMissingEvents()
+    public function testLoadDefinitionsMissingEvents(): void
     {
         $eventDispatcher = new EventDispatcher();
 
@@ -44,11 +65,10 @@ class EventDispatcherTest extends \PHPUnit_Framework_TestCase
             )
         ));
 
-        $definitions = $this->readAttribute($eventDispatcher, "definitions");
-        $this->assertEmpty($definitions);
+        $this->assertEmpty($eventDispatcher->getDefinitions());
     }
 
-    public function testLoadDefinitionsHavingEvents()
+    public function testLoadDefinitionsHavingEvents(): void
     {
         $eventDispatcher = new EventDispatcher();
 
@@ -59,7 +79,7 @@ class EventDispatcherTest extends \PHPUnit_Framework_TestCase
             )
         ));
 
-        $definitions = $this->readAttribute($eventDispatcher, "definitions");
+        $definitions = $eventDispatcher->getDefinitions();
         // listener has been grouped by event name
         $this->assertNotEmpty($definitions["core.post_request"]);
 
@@ -71,7 +91,7 @@ class EventDispatcherTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testGroupByEventMissingEvents()
+    public function testGroupByEventMissingEvents(): void
     {
         $eventDispatcher = new EventDispatcher();
 
@@ -83,11 +103,10 @@ class EventDispatcherTest extends \PHPUnit_Framework_TestCase
             )
         ));
 
-        $definitions = $this->readAttribute($eventDispatcher, "definitions");
-        $this->assertEmpty($definitions);
+        $this->assertEmpty($eventDispatcher->getDefinitions());
     }
 
-    public function testGroupByEventHavingEvents()
+    public function testGroupByEventHavingEvents(): void
     {
         $eventDispatcher = new EventDispatcher();
 
@@ -98,7 +117,7 @@ class EventDispatcherTest extends \PHPUnit_Framework_TestCase
             )
         ));
 
-        $definitions = $this->readAttribute($eventDispatcher, "definitions");
+        $definitions = $eventDispatcher->getDefinitions();
         // listener has been grouped by event name
         $this->assertNotEmpty($definitions["core.post_request"]);
 
@@ -110,7 +129,7 @@ class EventDispatcherTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testgetListenerMethodNameMissingClassName()
+    public function testgetListenerMethodNameMissingClassName(): void
     {
         $eventDispatcher = new EventDispatcher();
 
@@ -119,7 +138,7 @@ class EventDispatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("onPostRequest", $methodName);
     }
 
-    public function testgetListenerMethodNameHavingClassName()
+    public function testgetListenerMethodNameHavingClassName(): void
     {
         $eventDispatcher = new EventDispatcher();
 
@@ -128,7 +147,7 @@ class EventDispatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("onPostRequest", $methodName);
     }
 
-    public function testgetListenerMethodNameNotSnakeCased()
+    public function testgetListenerMethodNameNotSnakeCased(): void
     {
         $eventDispatcher = new EventDispatcher();
 
@@ -137,7 +156,7 @@ class EventDispatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("onPostRequest", $methodName);
     }
 
-    public function testDispatchNoDefinitions()
+    public function testDispatchNoDefinitions(): void
     {
         $eventDispatcher = new EventDispatcher();
 
@@ -146,7 +165,7 @@ class EventDispatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($result);
     }
 
-    public function testDispatchNoListenersForEvent()
+    public function testDispatchNoListenersForEvent(): void
     {
         $eventDispatcher = new EventDispatcher();
 
@@ -162,7 +181,7 @@ class EventDispatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($result);
     }
 
-    public function testDispatchNonExistingClass()
+    public function testDispatchNonExistingClass(): void
     {
         $eventDispatcher = new EventDispatcher();
 
@@ -174,11 +193,11 @@ class EventDispatcherTest extends \PHPUnit_Framework_TestCase
         ));
 
         $result = $eventDispatcher->dispatch("core.post_request");
-        
+
         $this->assertFalse($result);
     }
 
-    public function testDispatchExistingClass()
+    public function testDispatchExistingClass(): void
     {
         $eventDispatcher = new EventDispatcher();
 
@@ -190,7 +209,7 @@ class EventDispatcherTest extends \PHPUnit_Framework_TestCase
         ));
 
         $result = $eventDispatcher->dispatch("core.post_request");
-        
+
         $this->assertTrue($result);
     }
 
