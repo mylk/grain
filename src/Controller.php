@@ -6,6 +6,7 @@ use Grain\Database;
 use Grain\Container;
 use Grain\EventDispatcher;
 use Grain\Router;
+use Grain\Template;
 
 abstract class Controller
 {
@@ -13,6 +14,7 @@ abstract class Controller
     private $container;
     private $eventDispatcher;
     private $router;
+    private $template;
 
     /**
      * Sets the application configuration.
@@ -36,49 +38,6 @@ abstract class Controller
     public function getConfig()
     {
         return $this->config;
-    }
-
-    /**
-     * Returns the configuration of a single MySQL database by name.
-     *
-     * @param string $databaseName
-     *
-     * @return \PDO|null
-     */
-    protected function getDb($databaseName)
-    {
-        if (
-            !isset($this->config["mysql"])
-            || !isset($this->config["mysql"][$databaseName])
-        ) {
-            return null;
-        }
-
-        $config = $this->config["mysql"][$databaseName];
-
-        $database = new Database($config);
-        $connection = $database->connect();
-
-        return $connection;
-    }
-
-    /**
-     * Renders the given template.
-     *
-     * @param string $template The template filename
-     * @param array $parameters The variables to fill the template with
-     *
-     * @return void
-     */
-    protected function render($template, $parameters)
-    {
-        \extract($parameters);
-
-        // get the caller path to reach the Views directory of the project
-        $callerFile = \debug_backtrace()[0]["file"];
-        $callerPath = \substr($callerFile, 0, \strrpos($callerFile, "/"));
-
-        require "$callerPath/../Views/$template";
     }
 
     /**
@@ -141,6 +100,71 @@ abstract class Controller
         $this->router = $router;
 
         return $this;
+    }
+
+    /**
+     * Sets the template
+     *
+     * @param Template $template
+     *
+     * @return Controller
+     */
+    public function setTemplate(Template $template)
+    {
+        $this->template = $template;
+
+        return $this;
+    }
+
+    /**
+     * Gets the template engine
+     *
+     * @return Template
+     */
+    protected function getTemplate()
+    {
+        return $this->template;
+    }
+
+    /**
+     * Returns the configuration of a single MySQL database by name.
+     *
+     * @param string $databaseName
+     *
+     * @return \PDO|null
+     */
+    protected function getDb($databaseName)
+    {
+        if (
+            !isset($this->config["mysql"])
+            || !isset($this->config["mysql"][$databaseName])
+        ) {
+            return null;
+        }
+
+        $config = $this->config["mysql"][$databaseName];
+
+        $database = new Database($config);
+        $connection = $database->connect();
+
+        return $connection;
+    }
+
+    /**
+     * Renders the given template.
+     *
+     * @param string $template The template filename
+     * @param array $data The variables to fill the template with
+     *
+     * @return void
+     */
+    protected function render($template, $data)
+    {
+        // get the caller path to reach the Views directory of the project
+        $callerFile = \debug_backtrace()[0]["file"];
+        $callerPath = \substr($callerFile, 0, \strrpos($callerFile, "/"));
+
+        echo $this->template->render("$callerPath/../Views/$template", $data);
     }
 
     /**

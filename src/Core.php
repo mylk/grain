@@ -5,6 +5,7 @@ namespace Grain;
 use Grain\Router;
 use Grain\Container;
 use Grain\EventDispatcher;
+use Grain\Template;
 
 class Core
 {
@@ -12,6 +13,33 @@ class Core
     private $router;
     private $container;
     private $eventDispatcher;
+    private $template;
+
+    /**
+     * Used to pass the application parametets to the controllers and instanciate required classes.
+     *
+     * Core is being instanciated from the front controller.
+     *
+     * @param array $config
+     */
+    public function __construct($config)
+    {
+        $this->config = $config;
+        $this->router = new Router();
+        $this->template = new Template();
+        $this->initializeContainer(array())
+            ->initializeEventDispatcher(array());
+    }
+
+    /**
+     * Returns the configuration
+     *
+     * @return array
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
 
     /**
      * Returns the router
@@ -44,18 +72,13 @@ class Core
     }
 
     /**
-     * Used to pass the application parametets to the controllers and instanciate required classes.
+     * Returns the template service
      *
-     * Core is being instanciated from the front controller.
-     *
-     * @param array $config
+     * @return \Grain\Template|null
      */
-    public function __construct($config)
+    public function getTemplate()
     {
-        $this->config = $config;
-        $this->router = new Router();
-        $this->initializeContainer(array())
-            ->initializeEventDispatcher(array());
+        return $this->template;
     }
 
     /**
@@ -97,10 +120,11 @@ class Core
         $controllerClass = new $className();
 
         // add the global configuration to the controller and execute
-        $controllerClass->setConfig($this->config);
-        $controllerClass->setContainer($this->container)
+        $controllerClass->setConfig($this->config)
+            ->setContainer($this->container)
             ->setEventDispatcher($this->eventDispatcher)
-            ->setRouter($this->router);
+            ->setRouter($this->router)
+            ->setTemplate($this->template);
         $response = $controllerClass->$methodName($parameters);
 
         // handle array controller responses as JSON responses

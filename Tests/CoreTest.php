@@ -7,12 +7,41 @@ use Grain\Core;
 use Grain\Router;
 use Grain\Container;
 use Grain\EventDispatcher;
+use Grain\Template;
 
 require __DIR__ . "/Mocks/Controller/MockStringController.php";
 require __DIR__ . "/Mocks/Controller/MockArrayController.php";
 
 class CoreTest extends TestCase
 {
+    public function testConstructorPreparesServices()
+    {
+        $core = $this->getMockBuilder(Core::class)
+            ->setMethods(["initializeContainer", "initializeEventDispatcher"])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $core->expects($this->once())
+            ->method("initializeContainer")
+            ->willReturnSelf();
+        $core->expects($this->once())
+            ->method("initializeEventDispatcher")
+            ->willReturnSelf();
+
+        $core->__construct(array("foo"));
+
+        $this->assertEquals(array("foo"), $core->getConfig());
+        $this->assertEquals(new Router(), $core->getRouter());
+        $this->assertEquals(new Template(), $core->getTemplate());
+    }
+
+    public function testGetConfigReturnsConfigGivenDuringInitialization(): void
+    {
+        $testConfig = array("foo");
+        $core = new Core($testConfig);
+
+        $this->assertEquals($testConfig, $core->getConfig());
+    }
+
     public function testGetRouterReturnsRouter(): void
     {
         $testConfig = array();
@@ -35,6 +64,14 @@ class CoreTest extends TestCase
         $core = new Core($testConfig);
 
         $this->assertEquals(new EventDispatcher(), $core->getEventDispatcher());
+    }
+
+    public function testGetTemplateReturnsTemplate(): void
+    {
+        $testConfig = array();
+        $core = new Core($testConfig);
+
+        $this->assertEquals(new Template(), $core->getTemplate());
     }
 
     public function testMap(): void

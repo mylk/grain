@@ -70,6 +70,17 @@ Also, services can have dependencies that will be injected into them upon reques
 
 You can define the scope of a service, if they should be accessible from your controllers or just from other services as dependencies.
 
+A (simple) template engine
+--------------------------
+
+The (simple) template engine can render PHP templates or plain text templates (named TPL files for convenience).
+
+PHP files can evaluate any valid PHP expression normally, *but you shouldn't put any logic in your templates*.
+
+For that reason, its better to use the TPL templates, which just contain variables prepended with the % sign
+
+(ex. %firstName) that will be interpolated by the values passed to the template engine.
+
 Whishes to support
 ==================
 
