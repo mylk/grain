@@ -1,14 +1,11 @@
 language: php
 php:
-  - 5.4
-  - 5.5
-  - 5.6
-  - 7
+  - 7.2
 before_script:
   - composer install
   - composer dump-autoload
 script:
-  - vendor/bin/phpunit Tests/
+  - make test
 notfications:
   email:
     recipients:
