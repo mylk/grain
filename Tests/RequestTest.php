@@ -5,9 +5,9 @@ namespace Grain\Tests;
 use PHPUnit\Framework\TestCase;
 use Grain\Request;
 
-class RequestTests extends TestCase
+class RequestTest extends TestCase
 {
-    public function testGetParametersNoParameters(): void
+    public function testGetParametersReturnsEmptyArrayWhenNoParametersExist(): void
     {
         $request = new Request();
         $parameters = $request->getParameters("/", array(
@@ -19,7 +19,7 @@ class RequestTests extends TestCase
         $this->assertEquals(array(), $parameters);
     }
 
-    public function testGetParametersParameterOneAndOnly(): void
+    public function testGetParametersReturnsParameterWhenOneExists(): void
     {
         $request = new Request();
         $parameters = $request->getParameters("/1", array(
@@ -31,7 +31,7 @@ class RequestTests extends TestCase
         $this->assertEquals(array("id" => 1), $parameters);
     }
 
-    public function testGetParametersParameterBeginning(): void
+    public function testGetParametersReturnsParameterWhenExistsInTheBeginningOfUri(): void
     {
         $request = new Request();
         $parameters = $request->getParameters("/1/edit", array(
@@ -43,7 +43,7 @@ class RequestTests extends TestCase
         $this->assertEquals(array("id" => 1), $parameters);
     }
 
-    public function testGetParametersParameterMiddle(): void
+    public function testGetParametersReturnsParameterWhenExistsInTheMiddleOfUri(): void
     {
         $request = new Request();
         $parameters = $request->getParameters("/user/1/edit", array(
@@ -55,7 +55,7 @@ class RequestTests extends TestCase
         $this->assertEquals(array("id" => 1), $parameters);
     }
 
-    public function testGetParametersParameterEnd(): void
+    public function testGetParametersReturnsParameterWhenExistsInTheEndOfUri(): void
     {
         $request = new Request();
         $parameters = $request->getParameters("/user/edit/1", array(
@@ -67,7 +67,7 @@ class RequestTests extends TestCase
         $this->assertEquals(array("id" => 1), $parameters);
     }
 
-    public function testGetParametersParameterData(): void
+    public function testGetParametersReturnsParameterWhenQueryExists(): void
     {
         $request = new Request();
 
@@ -80,7 +80,7 @@ class RequestTests extends TestCase
         $this->assertEquals(array("parameter" => "1"), $parameters);
     }
 
-    public function testGetParametersPostData(): void
+    public function testGetParametersReturnsParameterWhenPostDataExist(): void
     {
         $request = $this
             ->getMockBuilder(Request::class)
@@ -98,7 +98,7 @@ class RequestTests extends TestCase
         $this->assertEquals(array("parameter" => "1"), $parameters);
     }
 
-    public function testGetParametersPostJsonData(): void
+    public function testGetParametersReturnsParameterWhenJsonPostDataExist(): void
     {
         $request = $this
             ->getMockBuilder(Request::class)
@@ -114,5 +114,10 @@ class RequestTests extends TestCase
         ), "application/json");
 
         $this->assertEquals(array("parameter" => "1"), $parameters);
+    }
+
+    public function testGetRawDataReturnsRawData(): void
+    {
+        $this->markTestIncomplete();
     }
 }

@@ -34,7 +34,7 @@ class CoreTest extends TestCase
         $this->assertEquals(new Template(), $core->getTemplate());
     }
 
-    public function testGetConfigReturnsConfigGivenDuringInitialization(): void
+    public function testGetConfigReturnsConfigurationGivenDuringInitialization(): void
     {
         $testConfig = array("foo");
         $core = new Core($testConfig);
@@ -74,7 +74,7 @@ class CoreTest extends TestCase
         $this->assertEquals(new Template(), $core->getTemplate());
     }
 
-    public function testMap(): void
+    public function testMapAddsRoute(): void
     {
         $testConfig = array();
         $core = new Core($testConfig);
@@ -92,7 +92,7 @@ class CoreTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testHandleRequestForNonExistentRoute(): void
+    public function testHandleReturnsNotFoundWhenNoRoutes(): void
     {
         $testConfig = array();
         $core = new Core($testConfig);
@@ -105,7 +105,7 @@ class CoreTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testHandleRequestForExistingRouteReturningString(): void
+    public function testHandleReturnsResponseWhenRouteExistsAndReturnsString(): void
     {
         $router = new Router();
         $routerReflection = new \ReflectionClass($router);
@@ -138,7 +138,7 @@ class CoreTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testHandleRequestForExistingRouteReturningArray(): void
+    public function testHandleReturnsResponseWhenRouteExistsAndReturnsArray(): void
     {
         $router = new Router();
         $routerReflection = new \ReflectionClass($router);
@@ -171,7 +171,7 @@ class CoreTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testHandleRequestForExistentRouteWithMultipleMethodsMatchingFirst(): void
+    public function testHandleReturnsMatchesGetMethodWhenMultipleMethodsExistForRoute(): void
     {
         $router = new Router();
         $routerReflection = new \ReflectionClass($router);
@@ -204,7 +204,7 @@ class CoreTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testHandleRequestForExistentRouteWithMultipleMethodsMatchingSecond(): void
+    public function testHandleReturnsMatchesPostMethodWhenMultipleMethodsExistForRoute(): void
     {
         $router = new Router();
         $routerReflection = new \ReflectionClass($router);
@@ -237,7 +237,7 @@ class CoreTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testHandleRequestForNonExistentRouteWithMultipleMethods(): void
+    public function testHandleReturnsNotFoundWhenRouteDoesNotSupportTheRequestedMethod(): void
     {
         $router = new Router();
         $routerReflection = new \ReflectionClass($router);
@@ -265,5 +265,40 @@ class CoreTest extends TestCase
         $response = $core->handle("/", "OPTIONS", "text/plain");
 
         $this->assertEquals("Route not found.", $response);
+    }
+
+    public function testHandleDispatchesPostRequestEvent()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testHandleDoesNotDispatchPreResponseEventWhenRouteDoesNotExist()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testHandleDispatchesPreResponseEventWhenRouteExists()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testHandleDoesNOtSetUpControllerWhenRouteDoesNotExist()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testHandleSetsUpControllerWhenRouteExists()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testInitializeContainerSetsUpServices(): void
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testInitializeEventDispatcherSetsUpServices(): void
+    {
+        $this->markTestIncomplete();
     }
 }

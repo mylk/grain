@@ -111,7 +111,7 @@ class RouterTest extends TestCase
         );
     }
 
-    public function testMatcherUrlWithoutParameters(): void
+    public function testMatcherReturnsRouterWhenNoParametersExist(): void
     {
         $matchedRoute = $this->router->matcher("/", "GET");
 
@@ -119,7 +119,7 @@ class RouterTest extends TestCase
         $this->assertEquals($this->findRouteByPath("/"), $matchedRoute);
     }
 
-    public function testMatcherUrlOnlyOneParameter(): void
+    public function testMatcherReturnsRouteWhenOneParameterExists(): void
     {
         $matchedRoute = $this->router->matcher("/1", "GET");
 
@@ -127,7 +127,7 @@ class RouterTest extends TestCase
         $this->assertEquals($this->findRouteByPath("/{id}"), $matchedRoute);
     }
 
-    public function testMatcherUrlBeginningParameter(): void
+    public function testMatcherReturnsRouteWhenUrlParameterExistsInTheBeginningOfTheUri(): void
     {
         $matchedRoute = $this->router->matcher("/1/edit", "GET");
 
@@ -135,7 +135,7 @@ class RouterTest extends TestCase
         $this->assertEquals($this->findRouteByPath("/{id}/edit"), $matchedRoute);
     }
 
-    public function testMatcherUrlMiddleParameter(): void
+    public function testMatcherReturnsRouteWhenUrlParameterExistsInTheMiddleOfTheUri(): void
     {
         $matchedRoute = $this->router->matcher("/user/1/edit", "GET");
 
@@ -143,7 +143,7 @@ class RouterTest extends TestCase
         $this->assertEquals($this->findRouteByPath("/user/{id}/edit"), $matchedRoute);
     }
 
-    public function testMatcherUrlEndParameter(): void
+    public function testMatcherReturnsRouteWhenUrlParameterExistsInTheEndOfTheUri(): void
     {
         $matchedRoute = $this->router->matcher("/user/edit/1", "GET");
 
@@ -151,14 +151,14 @@ class RouterTest extends TestCase
         $this->assertEquals($this->findRouteByPath("/user/edit/{id}"), $matchedRoute);
     }
 
-    public function testMatcherNonExistingRoute(): void
+    public function testMatcherReturnsNullWhenRouteDoesNotExist(): void
     {
         $matchedRoute = $this->router->matcher("/a/mess", "GET");
 
         $this->assertEquals(null, $matchedRoute);
     }
 
-    public function testMatcherRouteWithMultipleParametersMatchFirst(): void
+    public function testMatcherReturnsRouteWithGetMethodWhenMultipleParametersExist(): void
     {
         $matchedRoute = $this->router->matcher("/multiple/methods", "GET");
 
@@ -166,7 +166,7 @@ class RouterTest extends TestCase
         $this->assertEquals($this->findRouteByPath("/multiple/methods"), $matchedRoute);
     }
 
-    public function testMatcherRouteWithMultipleParametersMatchSecond(): void
+    public function testMatcherReturnsRouteWithPostMethodWhenMultipleParametersExist(): void
     {
         $matchedRoute = $this->router->matcher("/multiple/methods", "POST");
 
@@ -174,14 +174,14 @@ class RouterTest extends TestCase
         $this->assertEquals($this->findRouteByPath("/multiple/methods"), $matchedRoute);
     }
 
-    public function testMatcherRouteWithMultipleParametersNoMatch(): void
+    public function testMatcherReturnsNullWhenRouteDoesNotExistWithRequestedMethod(): void
     {
         $matchedRoute = $this->router->matcher("/multiple/methods", "OPTIONS");
 
         $this->assertEquals(null, $matchedRoute);
     }
 
-    public function testGenerateUrlNoRoutesExist(): void
+    public function testGenerateUrlReturnsNullWhenNoRoutesExist(): void
     {
         $router = new Router();
 
@@ -190,7 +190,7 @@ class RouterTest extends TestCase
         $this->assertNull($url);
     }
 
-    public function testGenerateUrlNonExistingRoute(): void
+    public function testGenerateUrlReturnsNullWhenRouteDoesNotExist(): void
     {
         $router = new Router();
 
@@ -206,7 +206,7 @@ class RouterTest extends TestCase
         $this->assertNull($url);
     }
 
-    public function testGenerateUrlExistingRouteWithoutParameters(): void
+    public function testGenerateUrlReturnsUrlWhenRouteWithoutParametersExists(): void
     {
         $router = new Router();
 
@@ -222,7 +222,7 @@ class RouterTest extends TestCase
         $this->assertEquals("/", $url);
     }
 
-    public function testGenerateUrlExistingRouteWithSingleParameter(): void
+    public function testGenerateUrlReturnsUrlWhenRouteWithSingleParameterExists(): void
     {
         $router = new Router();
 
@@ -238,7 +238,7 @@ class RouterTest extends TestCase
         $this->assertEquals("/1", $url);
     }
 
-    public function testGenerateUrlExistingRouteWithMultipleParameters(): void
+    public function testGenerateUrlReturnsUrlWhenRouteWithMultipleParametersExists(): void
     {
         $router = new Router();
 
@@ -254,7 +254,7 @@ class RouterTest extends TestCase
         $this->assertEquals("/user/edit/1/2", $url);
     }
 
-    public function testMapRouteWithOutParameters(): void
+    public function testAddRouteAddsRouteWhenRouteHasNoParameters(): void
     {
         $router = new Router();
 
@@ -282,7 +282,7 @@ class RouterTest extends TestCase
         );
     }
 
-    public function testMapRouteWithParameterOneAndOnly(): void
+    public function testAddRouteAddsRouteWhenRouteHasSingleParameter(): void
     {
         $router = new Router();
 
@@ -310,7 +310,7 @@ class RouterTest extends TestCase
         );
     }
 
-    public function testMapRouteWithParameterBeginning(): void
+    public function testAddRouteAddsRouteWhenRouteHasParameterAtTheBeginningOfTheUri(): void
     {
         $router = new Router();
 
@@ -338,7 +338,7 @@ class RouterTest extends TestCase
         );
     }
 
-    public function testMapRouteWithParameterMiddle(): void
+    public function testAddRouteAddsRouteWhenRouteHasParameterAtTheMiddleOfTheUri(): void
     {
         $router = new Router();
 
@@ -366,7 +366,7 @@ class RouterTest extends TestCase
         );
     }
 
-    public function testMapRouteWithParameterEnd(): void
+    public function testAddRouteAddsRouteWhenRouteHasParameterAtTheEndOfTheUri(): void
     {
         $router = new Router();
 
@@ -394,7 +394,7 @@ class RouterTest extends TestCase
         );
     }
 
-    public function testMapRouteWithTwoParameters(): void
+    public function testAddRouteAddsRouteWhenRouteHasTwoParameters(): void
     {
         $router = new Router();
 
@@ -423,14 +423,14 @@ class RouterTest extends TestCase
     }
 
     /**
-     * @dataProvider getRoutePaths
+     * @dataProvider generateRoutePathsAndParameterPositions
      */
-    public function testGetPathParameterPositions($routePath, $parameterPositions): void
+    public function testGetPathParameterReturnsPositionsOfParametersInUri($routePath, $parameterPositions): void
     {
         $this->assertEquals($parameterPositions, $this->router->getPathParameterPositions($routePath));
     }
 
-    public function getRoutePaths()
+    public function generateRoutePathsAndParameterPositions()
     {
         return array(
             array("/{id}", array(1)),

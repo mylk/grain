@@ -7,37 +7,77 @@ use Grain\Database;
 
 class DatabaseTest extends TestCase
 {
-    public function testConnectToDatabaseServer(): void
+    public function testConstructorSetsConfiguration(): void
     {
         $this->markTestIncomplete();
     }
 
-    public function testDisconnectFromDatabaseServer(): void
+    public function testDestructorDisconnectsFromDatabase(): void
     {
         $this->markTestIncomplete();
     }
 
-    public function testExecuteInvalidQuery(): void
+    public function testConnectReturnsSelfWhenConnectsToDatabaseSuccessfully(): void
     {
         $this->markTestIncomplete();
     }
 
-    public function testExecuteNotExistingTable(): void
+    public function testConnectReturnsNullWhenConnectionToDatabaseFails(): void
     {
         $this->markTestIncomplete();
     }
 
-    public function testExecuteNoResult(): void
+    public function testDisconnectDistructsConnection(): void
     {
         $this->markTestIncomplete();
     }
 
-    public function testExecuteSingleResult(): void
+    public function testExecuteReturnsNullWhenExecutingInvalidQuery(): void
     {
         $this->markTestIncomplete();
     }
 
-    public function testExecuteMultipleResults(): void
+    public function testExecuteReturnsNullWhenQueruingNotExistingTable(): void
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testExecuteReturnsNullWhenSingleResultIsRequestedAndNoResultExists(): void
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testExecuteReturnsResultWhenSingleResultIsRequestedAndResultExists(): void
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testExecuteReturnsEmptyArrayWhenMultipleResultsAreRequestedAndNoResultsExist(): void
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testExecuteReturnsResultsWhenMultipleResultsAreRequestedAndResultsExist(): void
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testFindReturnsEmptyArrayWhenNoResultsExist(): void
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testFindReturnsResultsWhenResultsExist(): void
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testFindOneReturnsNullWhenNoResultExists(): void
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testFindOneReturnsResultWhenResultExists(): void
     {
         $this->markTestIncomplete();
     }

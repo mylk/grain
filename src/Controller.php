@@ -17,7 +17,7 @@ abstract class Controller
     private $template;
 
     /**
-     * Sets the application configuration.
+     * Sets the application configuration
      *
      * @param array $config
      *
@@ -31,11 +31,11 @@ abstract class Controller
     }
 
     /**
-     * Gets the application configuration.
+     * Returns the application configuration
      *
      * @return array
      */
-    public function getConfig()
+    protected function getConfig()
     {
         return $this->config;
     }
@@ -55,7 +55,7 @@ abstract class Controller
     }
 
     /**
-     * Gets the container
+     * Returns the container
      *
      * @return Container
      */
@@ -65,7 +65,7 @@ abstract class Controller
     }
 
     /**
-     * Gets the event dispatcher
+     * Sets the event dispatcher
      *
      * @param EventDispatcher $eventDispatcher
      *
@@ -79,7 +79,7 @@ abstract class Controller
     }
 
     /**
-     * Gets the event dispatcher
+     * Returns the event dispatcher
      *
      * @return EventDispatcher
      */
@@ -103,6 +103,16 @@ abstract class Controller
     }
 
     /**
+     * Reutnrs the router
+     *
+     * @return EventDispatcher
+     */
+    protected function getRouter()
+    {
+        return $this->router;
+    }
+
+    /**
      * Sets the template
      *
      * @param Template $template
@@ -117,7 +127,7 @@ abstract class Controller
     }
 
     /**
-     * Gets the template engine
+     * Returns the template engine
      *
      * @return Template
      */
@@ -127,7 +137,7 @@ abstract class Controller
     }
 
     /**
-     * Returns the configuration of a single MySQL database by name.
+     * Returns the configuration of a single MySQL database by name
      *
      * @param string $databaseName
      *
@@ -151,7 +161,7 @@ abstract class Controller
     }
 
     /**
-     * Renders the given template.
+     * Renders the given template
      *
      * @param string $template The template filename
      * @param array $data The variables to fill the template with

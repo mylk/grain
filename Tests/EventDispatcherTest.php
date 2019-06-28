@@ -31,7 +31,7 @@ class EventDispatcherTest extends TestCase
         $this->assertNotEmpty($definitions);
     }
 
-    public function testLoadDefinitionsInvalidDefinitions(): void
+    public function testLoadDefinitionsThrowsExceptionWhenInvalidDefinitions(): void
     {
         $this->expectException(\Exception::class);
 
@@ -42,7 +42,7 @@ class EventDispatcherTest extends TestCase
         $container->loadDefinitions($definitions);
     }
 
-    public function testLoadDefinitionsEmptyDefinitions(): void
+    public function testLoadDefinitionsReturnsFalseWhenEmptyDefinitions(): void
     {
         $container = new EventDispatcher();
 
@@ -53,7 +53,7 @@ class EventDispatcherTest extends TestCase
         $this->assertFalse($result);
     }
 
-    public function testLoadDefinitionsMissingEvents(): void
+    public function testLoadDefinitionsDoesNotSetServicesWhenNoEventsExist(): void
     {
         $eventDispatcher = new EventDispatcher();
 
@@ -68,7 +68,7 @@ class EventDispatcherTest extends TestCase
         $this->assertEmpty($eventDispatcher->getDefinitions());
     }
 
-    public function testLoadDefinitionsHavingEvents(): void
+    public function testLoadDefinitionsSetsServicesWhenEventsSet(): void
     {
         $eventDispatcher = new EventDispatcher();
 
@@ -91,7 +91,7 @@ class EventDispatcherTest extends TestCase
         );
     }
 
-    public function testGroupByEventMissingEvents(): void
+    public function testGroupByEventReturnsEmptyArrayWhenNoEventsExistInDefinitions(): void
     {
         $eventDispatcher = new EventDispatcher();
 
@@ -106,7 +106,7 @@ class EventDispatcherTest extends TestCase
         $this->assertEmpty($eventDispatcher->getDefinitions());
     }
 
-    public function testGroupByEventHavingEvents(): void
+    public function testGroupByEventReturnsArrayOfServicesWhenEventsExist(): void
     {
         $eventDispatcher = new EventDispatcher();
 
@@ -129,7 +129,7 @@ class EventDispatcherTest extends TestCase
         );
     }
 
-    public function testgetListenerMethodNameMissingClassName(): void
+    public function testGetListenerMethodReturnsMethodNameWhenClassNameNotSetInEventName(): void
     {
         $eventDispatcher = new EventDispatcher();
 
@@ -138,7 +138,7 @@ class EventDispatcherTest extends TestCase
         $this->assertEquals("onPostRequest", $methodName);
     }
 
-    public function testgetListenerMethodNameHavingClassName(): void
+    public function testGetListenerMethodReturnsMethodNameWhenClassNameInEventNameIsSet(): void
     {
         $eventDispatcher = new EventDispatcher();
 
@@ -147,7 +147,7 @@ class EventDispatcherTest extends TestCase
         $this->assertEquals("onPostRequest", $methodName);
     }
 
-    public function testgetListenerMethodNameNotSnakeCased(): void
+    public function testGetListenerMethodReturnsMethodNameWhenMethodNameIsAlreadyProperlyNamed(): void
     {
         $eventDispatcher = new EventDispatcher();
 
@@ -156,7 +156,7 @@ class EventDispatcherTest extends TestCase
         $this->assertEquals("onPostRequest", $methodName);
     }
 
-    public function testDispatchNoDefinitions(): void
+    public function testDispatchReturnsFalseWhenNoDefinitionsExist(): void
     {
         $eventDispatcher = new EventDispatcher();
 
@@ -165,7 +165,7 @@ class EventDispatcherTest extends TestCase
         $this->assertFalse($result);
     }
 
-    public function testDispatchNoListenersForEvent(): void
+    public function testDispatchReturnsFalseWhenNoListenersForEventExist(): void
     {
         $eventDispatcher = new EventDispatcher();
 
@@ -181,7 +181,7 @@ class EventDispatcherTest extends TestCase
         $this->assertFalse($result);
     }
 
-    public function testDispatchNonExistingClass(): void
+    public function testDispatchReturnsFalseWhenListenerMethodDoesNotExist(): void
     {
         $eventDispatcher = new EventDispatcher();
 
@@ -197,7 +197,7 @@ class EventDispatcherTest extends TestCase
         $this->assertFalse($result);
     }
 
-    public function testDispatchExistingClass(): void
+    public function testDispatchReturnsTrueWhenListenerMethodExists(): void
     {
         $eventDispatcher = new EventDispatcher();
 

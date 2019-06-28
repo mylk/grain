@@ -33,7 +33,7 @@ class ContainerTest extends TestCase
         $this->assertNotEmpty($definitions);
     }
 
-    public function testLoadDefinitionsInvalidDefinitions(): void
+    public function testLoadDefinitionsThrowsExceptionWhenInvalidDefinitionsGiven(): void
     {
         $this->expectException(\Exception::class);
 
@@ -44,7 +44,7 @@ class ContainerTest extends TestCase
         $container->loadDefinitions($definitions);
     }
 
-    public function testLoadDefinitionsEmptyDefinitions(): void
+    public function testLoadDefinitionsReturnsFalseWhenEmptyDefinitionsGiven(): void
     {
         $container = new Container();
 
@@ -55,7 +55,7 @@ class ContainerTest extends TestCase
         $this->assertFalse($result);
     }
 
-    public function testLoadDefinitionsMissingPublic(): void
+    public function testLoadDefinitionsSetsPublicServiceWhenPublicPropertyIsMissing(): void
     {
         $container = new Container();
         $container->loadDefinitions(array(
@@ -68,7 +68,7 @@ class ContainerTest extends TestCase
         $this->assertCount(1, $container->getDefinitions());
     }
 
-    public function testLoadDefinitionsPublicService(): void
+    public function testLoadDefinitionsSetsPublicServiceWhenPublicPropertySetToTrue(): void
     {
         $container = new Container();
         $container->loadDefinitions(array(
@@ -82,7 +82,7 @@ class ContainerTest extends TestCase
         $this->assertCount(1, $container->getDefinitions());
     }
 
-    public function testLoadDefinitionsNonPublicService(): void
+    public function testLoadDefinitionsSetsPrivateServiceWhenPublicPropertySetToFalse(): void
     {
         $container = new Container();
         $container->loadDefinitions(array(
@@ -96,7 +96,7 @@ class ContainerTest extends TestCase
         $this->assertCount(0, $container->getDefinitions());
     }
 
-    public function testGetWhileNoDefinitionsExist(): void
+    public function testGetThrowsExceptionWhenNoServicesDefined(): void
     {
         $this->expectException(\Exception::class);
 
@@ -105,7 +105,23 @@ class ContainerTest extends TestCase
         $container->testService;
     }
 
-    public function testGetNotDefinedService(): void
+    public function testGetThrowsExceptionWhenRequestedServicesDoesNotExist(): void
+    {
+        $this->expectException(\Exception::class);
+
+        $container = new Container();
+        $container->loadDefinitions(array(
+            "TestService" => array(
+                "class" => "TestApp\Service\TestService",
+                "dependencies" => array(),
+                "public" => false
+            )
+        ));
+
+        $container->foo;
+    }
+
+    public function testGetThrowsExceptionWhenRequestedServiceIsPrivate(): void
     {
         $this->expectException(\Exception::class);
 
@@ -121,7 +137,7 @@ class ContainerTest extends TestCase
         $container->TestService;
     }
 
-    public function testGetNotInitializedServiceWithoutDependencies(): void
+    public function testGetReturnsServiceWhenServiceHasNoDependencies(): void
     {
         $container = new Container();
         $container->loadDefinitions(array(
@@ -136,7 +152,7 @@ class ContainerTest extends TestCase
         $this->assertInstanceOf("Grain\Tests\MockService", $service);
     }
 
-    public function testGetNotInitializedServiceWithNotInitializedDependencies(): void
+    public function testGetReturnsServiceWhenServiceHasDependency(): void
     {
         $container = new Container();
         $container->loadDefinitions(array(
@@ -156,7 +172,7 @@ class ContainerTest extends TestCase
         $this->assertInstanceOf("Grain\Tests\MockServiceWithDependency", $service);
     }
 
-    public function testGetNotInitializedServiceWithInitializedDependencies(): void
+    public function testGetReturnsServiceWhenServiceHasInitializedDependencies(): void
     {
         $container = new Container();
         $container->loadDefinitions(array(
@@ -184,7 +200,7 @@ class ContainerTest extends TestCase
         $this->assertSame($dependency, $dependencyService);
     }
 
-    public function testGetInitializedServiceWithoutDependencies(): void
+    public function testGetReturnsInitializedServiceWhenServiceHasNoDependencies(): void
     {
         $container = new Container();
         $container->loadDefinitions(array(
@@ -204,7 +220,7 @@ class ContainerTest extends TestCase
         $this->assertSame($serviceFirst, $serviceSecond);
     }
 
-    public function testGetNotInitializedServiceWithNonPublicDependencies(): void
+    public function testGetReturnsNotInitializedServiceWhenServiceHasPrivateDependency(): void
     {
         $this->expectException(\Exception::class);
 
@@ -225,7 +241,7 @@ class ContainerTest extends TestCase
         $container->Service;
     }
 
-    public function testServiceMissingDependenciesFromDefinitions(): void
+    public function testGetReturnsServiceWhenServiceDefinitionMissesDependencies(): void
     {
         $container = new Container();
         $container->loadDefinitions(array(

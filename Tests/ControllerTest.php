@@ -3,14 +3,89 @@
 namespace Grain\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Grain\Container;
 use Grain\Router;
 use Grain\Template;
+use Grain\EventDispatcher;
 
 class ControllerTest extends TestCase
 {
-    public function testGetDbConfigurationDoesNotExist(): void
+    public function testGetConfigReturnsEmptyArrayWhenConfigurationNotSet(): void
     {
-        $this->markTestIncomplete();
+        $controller = new MockStringController();
+
+        $result = $this->invokePrivateMethod($controller, "getConfig", array());
+
+        $this->assertEmpty($result);
+    }
+
+    public function testGetConfigReturnsConfigurationWhenSet(): void
+    {
+        $config = array("foo" => "bar");
+
+        $controller = new MockStringController();
+        $controller->setConfig($config);
+
+        $result = $this->invokePrivateMethod($controller, "getConfig", array());
+
+        $this->assertEquals($config, $result);
+    }
+
+    public function testGetRouterReturnsNullWhenNotSet(): void
+    {
+        $controller = new MockStringController();
+
+        $result = $this->invokePrivateMethod($controller, "getRouter", array());
+
+        $this->assertNull($result);
+    }
+
+    public function testGetRouterReturnsRouterWhenSet(): void
+    {
+        $controller = new MockStringController();
+        $controller->setRouter(new Router());
+
+        $result = $this->invokePrivateMethod($controller, "getRouter", array());
+
+        $this->assertEquals(new Router(), $result);
+    }
+
+    public function testGetContainerReturnsNullWhenNotSet(): void
+    {
+        $controller = new MockStringController();
+
+        $result = $this->invokePrivateMethod($controller, "getContainer", array());
+
+        $this->assertNull($result);
+    }
+
+    public function testGetContainerReturnsContainerWhenSet(): void
+    {
+        $controller = new MockStringController();
+        $controller->setContainer(new Container());
+
+        $result = $this->invokePrivateMethod($controller, "getContainer", array());
+
+        $this->assertEquals(new Container(), $result);
+    }
+
+    public function testGetEventDispatcherReturnsNullWhenNotSet(): void
+    {
+        $controller = new MockStringController();
+
+        $result = $this->invokePrivateMethod($controller, "getEventDispatcher", array());
+
+        $this->assertNull($result);
+    }
+
+    public function testGetEventDispatcherReturnsEventDispatcherWhenSet(): void
+    {
+        $controller = new MockStringController();
+        $controller->setEventDispatcher(new EventDispatcher());
+
+        $result = $this->invokePrivateMethod($controller, "getEventDispatcher", array());
+
+        $this->assertEquals(new EventDispatcher(), $result);
     }
 
     public function testGetTemplateReturnsNullWhenNotSet(): void
@@ -32,7 +107,41 @@ class ControllerTest extends TestCase
         $this->assertEquals(new Template(), $result);
     }
 
-    public function testGenerateUrlForNonExistingRoute(): void
+    public function testGetDbReturnsNullWhenAnyConfigurationNotSet(): void
+    {
+        $controller = new MockStringController();
+
+        $result = $this->invokePrivateMethod($controller, "getDb", array("foo"));
+
+        $this->assertNull($result);
+    }
+
+    public function testGetDbReturnsNullWhenSpecificDatabaseConfigurationNotSet(): void
+    {
+        $controller = new MockStringController();
+        $controller->setConfig(array("mysql" => array()));
+
+        $result = $this->invokePrivateMethod($controller, "getDb", array("foo"));
+
+        $this->assertNull($result);
+    }
+
+    public function testGetDbReturnsDatabaseConnectionWhenConfigurationExists(): void
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testRenderCallsRenderOfTemplateService(): void
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testRedirectSetsLocationHeader(): void
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testGenerateUrlReturnsNullWhenRouteDoesNotExist(): void
     {
         $router = new Router();
         $controller = new MockStringController();
@@ -50,7 +159,7 @@ class ControllerTest extends TestCase
         $this->assertNull($url);
     }
 
-    public function testGenerateUrlForExistingRoute(): void
+    public function testGenerateUrlReturnsUrlWhenRouteExists(): void
     {
         $router = new Router();
         $controller = new MockStringController();
