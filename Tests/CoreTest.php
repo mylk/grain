@@ -272,7 +272,7 @@ class CoreTest extends TestCase
         $this->markTestIncomplete();
     }
 
-    public function testHandleDoesNotDispatchPreResponseEventWhenRouteDoesNotExist()
+    public function testHandleDispatchesPreResponseEventAndReturnsNotFoundWhenRouteDoesNotExist()
     {
         $this->markTestIncomplete();
     }
@@ -282,12 +282,22 @@ class CoreTest extends TestCase
         $this->markTestIncomplete();
     }
 
-    public function testHandleDoesNOtSetUpControllerWhenRouteDoesNotExist()
+    public function testHandleDoesNotSetUpControllerWhenRouteDoesNotExist()
     {
         $this->markTestIncomplete();
     }
 
     public function testHandleSetsUpControllerWhenRouteExists()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testHandleReturnsPlainTextResponseWhenControllerResponseIsString()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testHandleReturnsJsonEncodedResponseWhenControllerResponseIsArray()
     {
         $this->markTestIncomplete();
     }
